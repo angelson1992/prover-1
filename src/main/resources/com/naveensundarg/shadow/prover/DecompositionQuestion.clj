@@ -162,7 +162,7 @@
                 )
                 (and
                     (IsAreaOf ($$product ?RectLength ?RectWidth) ?Rectangle)
-                    (ArtifactExists product ?RectLength ?RectWidth)
+                    (ArtifactExists product ?RectLength ?RectWidth ($$product ?RectLength ?RectWidth))
                 )
             )
         )
@@ -183,7 +183,7 @@
                 )
                 (and
                     (IsLineLengthPart2out2Of ($$difference ?LineLengthTotal ?LineLengthPart1out2) ?Line)
-                    (ArtifactExists difference ?LineLengthTotal ?LineLengthPart1out2)
+                    (ArtifactExists difference ?LineLengthTotal ?LineLengthPart1out2 ($$difference ?LineLengthTotal ?LineLengthPart1out2))
                 )
             )
         )
@@ -206,7 +206,7 @@
                 )
                 (and
                     (IsAreaOf ($$sum ?AreaOfPartRect1 ?AreaOfPartRect2) ?CompositeRectangle)
-                    (ArtifactExists sum ?AreaOfPartRect1 ?AreaOfPartRect2)
+                    (ArtifactExists sum ?AreaOfPartRect1 ?AreaOfPartRect2 ($$sum ?AreaOfPartRect1 ?AreaOfPartRect2))
                 )
             )
         )
@@ -225,13 +225,13 @@
 
     }
 
- :answer-variables [?x ?a ?b ?c]
+ :answer-variables [?x ?a ?b ?c ?d]
 
  :answers-expected ( )
 
  :goal (and
             (IsAreaOf ?x compRect1)
             (= ?x 22)
-            (ArtifactExists ?a ?b ?c)
+            (ArtifactExists ?a ?b ?c ?d)
        )
 }
