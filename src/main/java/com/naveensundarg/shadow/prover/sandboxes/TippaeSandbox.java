@@ -24,65 +24,70 @@ public class TippaeSandbox {
     private static SnarkWrapper snarkProver = SnarkWrapper.getInstance();
 
 
-    private static boolean isCognitiveProof = false; //Set this variable to determine if using Cognitive prover or only Snark
+    private static boolean isCognitiveProof = true; //Set this variable to determine if using Cognitive prover or only Snark
+    private static int specificTestNumber = 3; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
 
     public static void main(String[] args) throws Exception {
 
-        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../DecompositionQuestion.clj"));
+        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../Tippae-debug.clj"));
 
         for (int i = 0; i < tests.size(); i++) {
 
-            Problem p = (tests.get(i));
+            if ( (specificTestNumber > -1 && specificTestNumber == i) || specificTestNumber == -1 ) {
 
-            CognitiveCalculusProver cognitiveCalculusProver = new CognitiveCalculusProver();
+                Problem p = (tests.get(i));
 
-            Prover prover;
+                CognitiveCalculusProver cognitiveCalculusProver = new CognitiveCalculusProver();
 
-            if(isCognitiveProof){
-                prover = cognitiveCalculusProver;
-            }else{
-                prover = snarkProver;
-            }
+                Prover prover;
 
-            if (p.getAnswerVariables().isPresent()) {
-
-                Long startTime = System.currentTimeMillis();
-
-                Optional<Pair<Justification, Set<Map<Variable, Value>>>> answer = prover.proveAndGetMultipleBindings(p.getAssumptions(), p.getGoal(), p.getAnswerVariables().get());
-
-                Long endTime = System.currentTimeMillis();
-
-                System.out.println(p.getName());
-
-                if (answer.isPresent()) {
-
-                    System.out.println("Proved and the answer is [" + answer.get().getRight() + "]");
-                    System.out.println("Run time was " + (endTime-startTime) + " milliseconds.");
-
+                if (isCognitiveProof) {
+                    prover = cognitiveCalculusProver;
                 } else {
-
-                    System.out.println("No!");
-
+                    prover = snarkProver;
                 }
 
-            } else {
+                if (p.getAnswerVariables().isPresent()) {
 
-                Long startTime = System.currentTimeMillis();
+                    Long startTime = System.currentTimeMillis();
 
-                Optional<Justification> justificationOptional = (prover.prove(p.getAssumptions(), p.getGoal()));
+                    Optional<Pair<Justification, Set<Map<Variable, Value>>>> answer = prover.proveAndGetMultipleBindings(p.getAssumptions(), p.getGoal(), p.getAnswerVariables().get());
 
-                Long endTime = System.currentTimeMillis();
+                    Long endTime = System.currentTimeMillis();
 
-                System.out.println(p.getName());
+                    System.out.println(p.getName());
 
-                if (justificationOptional.isPresent()) {
+                    if (answer.isPresent()) {
 
-                    System.out.println("Proved!");
-                    System.out.println("Run time was " + (endTime-startTime) + " milliseconds.");
+                        System.out.println("Proved and the answer is [" + answer.get().getRight() + "]");
+                        System.out.println("Run time was " + (endTime - startTime) + " milliseconds.");
+
+                    } else {
+
+                        System.out.println("No!");
+
+                    }
 
                 } else {
 
-                    System.out.println("No!");
+                    Long startTime = System.currentTimeMillis();
+
+                    Optional<Justification> justificationOptional = (prover.prove(p.getAssumptions(), p.getGoal()));
+
+                    Long endTime = System.currentTimeMillis();
+
+                    System.out.println(p.getName());
+
+                    if (justificationOptional.isPresent()) {
+
+                        System.out.println("Proved!");
+                        System.out.println("Run time was " + (endTime - startTime) + " milliseconds.");
+
+                    } else {
+
+                        System.out.println("No!");
+
+                    }
 
                 }
 
