@@ -1,4 +1,47 @@
 {:name Maintaining_the_Identity_of_Dynamically_Embodied_Agents
+ :description "This formalism test is for the idea of using color, class, features, and marking as identity cues"
+ :assumptions
+    {C1 (Common! now (and
+                        (IsTrait blackAndYellow)
+                        (IsTraitType color)
+                        (IsTraitType class)
+                        (IsTraitType features)
+                        (IsTraitType markings)
+                        (forall ?trait (exists ?traitType (HasTraitType ?trait ?traitType)))
+                     )
+        )
+
+     C2 (Common! now (HasTraitType blackAndYellow color))
+
+     C3 (Common! now (forall [?embodiment1 ?embodiment2 ?trait]
+                         (if
+                             (and
+                                 (IsTrait ?trait)
+                                 (HasIdentifyingTrait ?embodiment1 ?trait)
+                                 (HasIdentifyingTrait ?embodiment2 ?trait)
+                             )
+
+                             (= (identityOf ?embodiment1) (identityOf ?embodiment2) )
+                         )
+                     )
+        )
+
+     C4 (Common! now (and
+                            (IsMoreEffectiveThan features color)
+                            (IsMoreEffectiveThan features class)
+                            (IsMoreEffectiveThan features markings)
+                        ))
+
+     A1 (Perceives! human t1 (HasIdentifyingTrait (embodiment a) blackAndYellow) )
+
+     A2 (Perceives! human t2 (HasIdentifyingTrait (embodiment b) blackAndYellow) )
+
+    }
+
+ :goal (Believes! human t4 (= (identityOf (embodiment a)) (identityOf (embodiment b)) ))
+}
+
+{:name A_User_Study_on_Visualization_of_Agent_Migration_between_Two_Companion_Robots
  :description ""
  :assumptions
     {A1 (Believes! human t0 (HasTraitType blackAndYellow color))
