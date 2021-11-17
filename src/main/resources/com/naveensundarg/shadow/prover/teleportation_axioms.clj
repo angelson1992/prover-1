@@ -129,12 +129,12 @@
 {:name Identity_of_socially_interactive_robotic_twins_initial_results_of_VHRI_study
  :description "This formalism test is for the idea of using personality as a distinguishing identifying cue between several identical looking embodiments"
  :assumptions
-    {;;C1    (Common! now (IsTrait slow_movements) )
-     ;;C11   (Common! now (IsTrait rapid_movements))
+    {C10    (Common! now (IsTrait slow_movements) )
+     C11   (Common! now (IsTrait rapid_movements))
      ;;C12   (Common! now (IsTrait penetrating_look))
      ;;C13   (Common! now (IsTrait restless_glance))
      ;;C14   (Common! now (IsTrait active_neck))
-     ;;C15   (Common! now (IsTrait sputnik_form))
+     C15   (Common! now (IsTrait sputnik_form))
      ;;C16   (Common! now (IsTraitType personality))
      ;;C17   (Common! now (IsTraitType appearance))
      ;;C18   (Common! now (forall ?trait (exists ?traitType (HasTraitType ?trait ?traitType))))
@@ -152,28 +152,20 @@
      C3 (Common! now (forall [?embodiment1 ?embodiment2 ?embodiment3 ?personalityTrait1 ?personalityTrait2 ?appearanceTrait]
                          (if
                              (and
-                                 ;;(IsTrait ?personalityTrait1)
-                                 ;;(IsTrait ?personalityTrait2)
-                                 ;;(IsTrait ?appearanceTrait)
                                  (HasTraitType ?personalityTrait1 personality)
-                                 (HasTraitType ?personalityTrait2 personality)
                                  (HasTraitType ?appearanceTrait appearance)
                                  (HasIdentifyingTrait ?embodiment1 ?personalityTrait1)
                                  (HasIdentifyingTrait ?embodiment2 ?personalityTrait1)
-                                 (HasIdentifyingTrait ?embodiment3 ?personalityTrait2)
                                  (HasIdentifyingTrait ?embodiment1 ?appearanceTrait)
                                  (HasIdentifyingTrait ?embodiment2 ?appearanceTrait)
                                  (HasIdentifyingTrait ?embodiment3 ?appearanceTrait)
                              )
 
-                             (and
-                                (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment2) )
-                                (not (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment3)))
-                                (not (TeleportedInto (identityOf ?embodiment2) (identityOf ?embodiment3)))
-                             )
+                                (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment2) ?personalityTrait1)
+
                          )
                      )
-        )
+       )
 
      A1 (Perceives! human t1 (and (HasIdentifyingTrait (embodiment a) sputnik_form) (HasIdentifyingTrait (embodiment a) rapid_movements)) )
 
@@ -183,10 +175,8 @@
 
     }
 
- :goal (Believes! human t4 (and (HasIdentifyingTrait (embodiment a) sputnik_form)
-                                (HasIdentifyingTrait (embodiment b) sputnik_form)
-                                (HasIdentifyingTrait (embodiment c) sputnik_form)
-                            ))
+ :goal (Believes! human t4 (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b)) rapid_movements))
+
 }
 
 {:name Generic-Direct-Migration-Test
