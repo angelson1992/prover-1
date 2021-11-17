@@ -25,11 +25,11 @@ public class TippaeSandbox {
 
 
     private static boolean isCognitiveProof = true; //Set this variable to determine if using Cognitive prover or only Snark
-    private static int specificTestNumber = 3; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
+    private static int specificTestNumber = 4; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
 
     public static void main(String[] args) throws Exception {
 
-        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../teleportation_axioms.clj"));
+        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../teleportation_simulation.clj"));
 
         for (int i = 0; i < tests.size(); i++) {
 
@@ -60,7 +60,7 @@ public class TippaeSandbox {
                     if (answer.isPresent()) {
 
                         System.out.println("Proved and the answer is [" + answer.get().getRight() + "]");
-                        System.out.println("Run time was " + (endTime - startTime) + " milliseconds.\n\n\n");
+                        System.out.println("Run time was " + (endTime - startTime) + " milliseconds.");
 
                     } else {
 

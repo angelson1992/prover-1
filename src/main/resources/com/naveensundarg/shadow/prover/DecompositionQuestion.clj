@@ -231,7 +231,6 @@
 
  :goal (and
             (IsAreaOf ?x compRect1)
-            (= ?x 22)
             (ArtifactExists ?a ?b ?c ?d)
        )
 }
