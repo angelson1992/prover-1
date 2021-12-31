@@ -182,43 +182,111 @@
 {:name Generic-Direct-Migration-Test
  :description ""
  :assumptions
-    {A1 (Perceives! human t1 (Holds (IdentifyingTrait (embodiment a) TTSVoiceCarol) t2 ))
+    {A1 (Perceives! human t1 (IdentifyingTrait (embodiment a) TTSVoiceCarol))
 
-     A2 (Perceives! human t2 (Holds (IdentifyingTrait (embodiment b) TTSVoiceCarol) t3 ))
+     A2 (Perceives! human t2 (IdentifyingTrait (embodiment b) TTSVoiceCarol))
 
-     A3 (Believes! human t3 (if (exists [?agent1 ?agent2 ?trait ?time1 ?time2]
+     A3 (Common! now (forall [?agent1 ?agent2 ?trait ?time1 ?time2]
+                                (if
                                     (and
-                                        (Holds (IdentifyingTrait ?agent1 ?trait) ?time1)
-                                        (Holds (IdentifyingTrait ?agent2 ?trait) ?time2)
+                                        (IdentifyingTrait ?agent1 ?trait)
+                                        (IdentifyingTrait ?agent2 ?trait)
                                     )
+
+                                    (TeleportedInto (identityOf ?agent1) (identityOf ?agent2) )
+
                                 )
-                                (= (identityOf ?agent1) (identityOf ?agent2) )))
+                     )
+        )
 
     }
 
- :goal  (Believes! human t4 (= (identityOf (embodiment a)) (identityOf (embodiment c))))
+ :goal  (Believes! human t4 (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b))))
 }
 
-{:name Indirect-Migration-Test
+{:name Identity_of_a_companion_migrating_between_robots_without_common_communication_modalities_initial_results_of_VHRI_study
  :description ""
  :assumptions
-    {A1 (Perceives! human t1 (Holds (IdentifyingTrait (embodiment a) wagglesEyebrows) t1 ))
-     A2 (Perceives! human t2 (Holds (IdentifyingTrait (embodiment a) TTSVoiceCarol) t2 ))
+    {A1 (Perceives! human t1 (IdentifyingTrait (embodiment a) wagglesEyebrows))
+     A2 (Perceives! human t2 (IdentifyingTrait (embodiment a) TTSVoiceCarol))
 
-     A3 (Perceives! human t3 (Holds (IdentifyingTrait (embodiment b) TTSVoiceCarol) t3 ))
-     A4 (Perceives! human t4 (Holds (IdentifyingTrait (embodiment b) AngularRoutes) t4 ))
+     A3 (Perceives! human t3 (IdentifyingTrait (embodiment b) TTSVoiceCarol))
+     A4 (Perceives! human t4 (IdentifyingTrait (embodiment b) AngularRoutes))
 
-     A5 (Perceives! human t5 (Holds (IdentifyingTrait (embodiment c) AngularRoutes) t5 ))
+     A5 (Perceives! human t5 (IdentifyingTrait (embodiment c) AngularRoutes))
 
-     A6 (Believes! human t4 (if (exists [?agent1 ?agent2 ?trait ?time1 ?time2]
+     A6 (Common! now (forall [?agent1 ?agent2 ?trait]
+                                (if
                                     (and
-                                        (Holds (IdentifyingTrait ?agent1 ?trait) ?time1)
-                                        (Holds (IdentifyingTrait ?agent2 ?trait) ?time2)
+                                        (IdentifyingTrait ?agent1 ?trait)
+                                        (IdentifyingTrait ?agent2 ?trait)
                                     )
+
+                                    (TeleportedInto (identityOf ?agent1) (identityOf ?agent2) )
                                 )
-                                (= (identityOf ?agent1) (identityOf ?agent2) )))
+                     )
+        )
+
+     A7 (Common! now (forall [?agent1 ?agent2 ?agent3]
+                                 (if
+                                     (and
+                                         (TeleportedInto (identityOf ?agent1) (identityOf ?agent2) )
+                                         (TeleportedInto (identityOf ?agent2) (identityOf ?agent3) )
+                                     )
+
+                                     (TeleportedInto (identityOf ?agent1) (identityOf ?agent3) )
+                                 )
+                      )
+         )
 
     }
 
- :goal  (Believes! human t5 (= (identityOf (embodiment a)) (identityOf (embodiment c))))
+ :goal  (Believes! human t7 (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment c))))
+}
+
+{:name Prototyping_Realistic_Long-term_Human-Robot_Interaction_for_the_Study_of_Agent_Migration
+ :description "This formalism takes what is presented in this paper and interprets it as a migration cue"
+ :assumptions
+    { C1 (Common! now (and
+                         (IsTeleportationCue commandTeleport)
+                         (IsTeleportationCue requestTeleport)
+                         (IsTeleCueInit commandTeleInit)
+                         (IsTeleCueInit requestTeleInit)
+                         (IsTeleCueFinish commandTeleFinish)
+                         (IsTeleCueFinish requestTeleFinish)
+                         (forall ?teleportationCue (exists [?teleCueInit ?teleCueFinish] (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish)))
+                      )
+         )
+
+      C2 (Common! now (and
+                           (TeleportationCueHalves commandTeleport commandTeleInit commandTeleFinish)
+                           (TeleportationCueHalves requestTeleport requestTeleInit requestTeleFinish)
+                      )
+         )
+
+      C3 (Common! now (forall [?embodiment1 ?embodiment2 ?teleportationCue ?teleCueInit ?teleCueFinish ?time]
+                          (if
+                              (and
+                                  (IsTeleportationCue ?teleportationCue)
+                                  (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish)
+                                  (IsPresentingTeleCue ?embodiment1 ?teleCueInit)
+                                  (IsPresentingTeleCue ?embodiment2 ?teleCueFinish)
+                              )
+
+                              (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment2) )
+                          )
+                      )
+         )
+
+      A1 (Perceives! human t2 (and
+                                (IsPresentingTeleCue (embodiment a) requestTeleInit)
+                                (IsPresentingTeleCue (embodiment b) requestTeleFinish)
+                              )
+         )
+
+
+
+    }
+
+ :goal  (Believes! human t4 (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b)) ))
 }
