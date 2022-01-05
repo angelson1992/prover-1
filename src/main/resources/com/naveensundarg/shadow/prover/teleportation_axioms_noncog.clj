@@ -294,3 +294,62 @@
 
  :goal  (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b)) ) ;;at t4
 }
+
+{:name The_Unified_Theory_Of_Teleportation
+ :description ""
+ :assumptions
+    {A1 (HasTrait (embodiment a) TTSVoiceCarol) ;;at t1
+
+     A2 (HasTrait (embodiment b) TTSVoiceCarol) ;;at t2
+
+     A3 (IsUniqueIdentifyingTrait TTSVoiceCarol)
+
+     A4 (and
+          (IsTeleportationCue movingFace)
+          (IsTeleCueInit movingFaceInit)
+          (IsTeleCueFinish movingFaceFinish)
+          (TeleportationCueHalves movingFace movingFaceInit movingFaceFinish)
+        )
+
+     A5 (IsPresentingTeleCue (embodiment a) movingFaceInit)
+     A6 (IsPresentingTeleCue (embodiment b) movingFaceFinish)
+
+     C1 (forall [?embodiment1 ?embodiment2 ?trait]
+            (if
+                (and
+                    (IsUniqueIdentifyingTrait ?trait)
+                    (HasTrait ?embodiment1 ?trait)
+                    (HasTrait ?embodiment2 ?trait)
+                )
+
+                (IdentityRetention ?embodiment1 ?embodiment2 )
+
+            )
+        )
+
+    C2 (forall [?embodiment1 ?embodiment2 ?teleportationCue ?teleCueInit ?teleCueFinish]
+          (if
+              (and
+                  (IsTeleportationCue ?teleportationCue)
+                  (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish)
+                  (IsPresentingTeleCue ?embodiment1 ?teleCueInit)
+                  (IsPresentingTeleCue ?embodiment2 ?teleCueFinish)
+              )
+
+              (TeleportationRealization ?embodiment1 ?embodiment2)
+          )
+       )
+
+    C3  (forall [?embodiment1 ?embodiment2 ?agent]
+
+        )
+
+
+    }
+
+ :answer-variables [?x ?y]
+
+ :answers-expected ( )
+
+ :goal  (TeleportationRealization ?x ?y) ;;at t4
+}

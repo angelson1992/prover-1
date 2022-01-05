@@ -25,7 +25,7 @@ public class TippaeSandbox {
 
 
     private static boolean isCognitiveProof = false; //Set this variable to determine if using Cognitive prover or only Snark
-    private static int specificTestNumber = 1; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
+    private static int specificTestNumber = 7; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
 
     public static void main(String[] args) throws Exception {
 
