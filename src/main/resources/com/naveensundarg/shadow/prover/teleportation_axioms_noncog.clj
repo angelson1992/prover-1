@@ -157,29 +157,27 @@
              (if
                  (and
                      (HasTraitType ?personalityTrait1 personality)
-                     (HasTraitType ?appearanceTrait appearance)
+                     (= (EmbodimentAppearance ?embodiment1) (EmbodimentAppearance ?embodiment2))
+                     (= (EmbodimentAppearance ?embodiment2) (EmbodimentAppearance ?embodiment3))
                      (HasIdentifyingTrait ?embodiment1 ?personalityTrait1)
                      (HasIdentifyingTrait ?embodiment2 ?personalityTrait1)
-                     (HasIdentifyingTrait ?embodiment1 ?appearanceTrait)
-                     (HasIdentifyingTrait ?embodiment2 ?appearanceTrait)
-                     (HasIdentifyingTrait ?embodiment3 ?appearanceTrait)
                  )
 
-                    (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment2) ?personalityTrait1)
+                    (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment2))
 
              )
         )
 
 
-     A1 (and (HasIdentifyingTrait (embodiment a) sputnik_form) (HasIdentifyingTrait (embodiment a) rapid_movements)) ;;at t1
+     A1 (and (= (EmbodimentAppearance (embodiment a)) sputnik_form) (HasIdentifyingTrait (embodiment a) rapid_movements)) ;;at t1
 
-     A2 (and (HasIdentifyingTrait (embodiment b) sputnik_form) (HasIdentifyingTrait (embodiment b) rapid_movements)) ;;at t2
+     A2 (and (= (EmbodimentAppearance (embodiment b)) sputnik_form) (HasIdentifyingTrait (embodiment b) rapid_movements)) ;;at t2
 
-     A3 (and (HasIdentifyingTrait (embodiment c) sputnik_form) (HasIdentifyingTrait (embodiment c) slow_movements)) ;;at t3
+     A3 (and (= (EmbodimentAppearance (embodiment c)) sputnik_form) (HasIdentifyingTrait (embodiment c) slow_movements)) ;;at t3
 
     }
 
- :goal (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b)) rapid_movements) ;;at t4
+ :goal (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b))) ;;at t4
 
 }
 
@@ -298,17 +296,33 @@
 {:name The_Unified_Theory_Of_Teleportation
  :description ""
  :assumptions
-    {A1 (HasTrait (embodiment a) TTSVoiceCarol) ;;at t1
-
+    {B1 (HasTrait (embodiment a) wagglesEyebrows) ;;at t1
+     A1 (HasTrait (embodiment a) TTSVoiceCarol) ;;at t1
      A2 (HasTrait (embodiment b) TTSVoiceCarol) ;;at t2
+     B2 (HasTrait (embodiment b) AngularRoutes) ;;at t4
+     B3 (HasTrait (embodiment c) AngularRoutes) ;;at t3
 
      A3 (IsUniqueIdentifyingTrait TTSVoiceCarol)
+     B4 (IsUniqueIdentifyingTrait AngularRoutes)
 
      A4 (and
           (IsTeleportationCue movingFace)
           (IsTeleCueInit movingFaceInit)
           (IsTeleCueFinish movingFaceFinish)
           (TeleportationCueHalves movingFace movingFaceInit movingFaceFinish)
+          ;;(IsTeleportationCue movingBar)
+
+          (IsTraitType color)
+          (IsTraitType class)
+          (IsTraitType features)
+          (IsTraitType markings)
+          (IsTraitType voice)
+          (IsTraitType personality)
+
+          (IsTrait friendly)
+          (IsMood pleasant)
+          (IsInteractionStrategy motivating)
+          (PersonalityComponentsAre friendly pleasant motivating)
         )
 
      A5 (IsPresentingTeleCue (embodiment a) movingFaceInit)
@@ -340,10 +354,16 @@
           )
        )
 
-    C3  (forall [?embodiment1 ?embodiment2 ?agent]
+    C3  (forall [?embodiment1 ?embodiment2 ?embodiment3]
+             (if
+                 (and
+                     (IdentityRetention ?embodiment1 ?embodiment2 )
+                     (IdentityRetention ?embodiment2 ?embodiment3 )
+                 )
 
+                 (IdentityRetention ?embodiment1 ?embodiment3 )
+             )
         )
-
 
     }
 
@@ -351,5 +371,5 @@
 
  :answers-expected ( )
 
- :goal  (TeleportationRealization ?x ?y) ;;at t4
+ :goal  (IdentityRetention ?x ?y) ;;at t4
 }
