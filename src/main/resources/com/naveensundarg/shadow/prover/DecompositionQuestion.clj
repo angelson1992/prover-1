@@ -338,3 +338,422 @@
             (ComplexityMeasure ?e ?f ?g)
        )
 }
+
+{:name BelowBasicQuestion1
+ :assumptions
+    {
+        A0 (and
+                (HasSameSize axe1 axe2)
+                (HasSameShape axe1 axe2)
+           )
+
+        A1 (forall (?figure1 ?figure2)
+                    (if
+                        (and
+                            (HasSameSize ?figure1 ?figure2)
+                            (HasSameShape ?figure1 ?figure2)
+                        )
+                        (and
+                            (AreCongruent ?figure1 ?figure2)
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaae 3 9)
+                            (SkillUsed 4 MG 3 3)
+                        )
+                    )
+            )
+
+        A2 (forall (?figure1 ?figure2)
+                    (if
+                        (HasSameSize ?figure1 ?figure2)
+                        (and
+                            (ComplexityMeasure aaaf 3 3)
+                            (SkillUsed 1 MG 1 1)
+                        )
+                    )
+            )
+
+        A3 (forall (?figure1 ?figure2)
+                    (if
+                        (HasSameShape ?figure1 ?figure2)
+                        (and
+                            (ComplexityMeasure aaag 3 3)
+                            (SkillUsed 1 MG 2 1)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal (and (AreCongruent ?x ?y) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name BelowBasicQuestion2
+ :assumptions
+    {
+        A0 (and
+                (HasFaces pyramid (and triangle1 triangle2 triangle3 triangle4 square1))
+                (IsComposedOf optionFigure (and triangle1 triangle2 triangle3 triangle4 square1))
+           )
+
+        A1 (forall (?figure1 ?solid1)
+                    (if
+                        (and
+                            (HasFaces ?solid1 ?configuration)
+                            (IsComposedOf ?figure1 ?configuration)
+                        )
+                        (and
+                            (Is2DRepresentationOf ?figure1 ?solid1)
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaae 3 9)
+                            (SkillUsed 4 MG 3 6)
+                        )
+                    )
+            )
+
+        A2
+            (if
+                (IsComposedOf optionFigure (and triangle1 triangle2 triangle3 triangle4 square1))
+                (and
+                    (ComplexityMeasure aaaf 6 7)
+                    (SkillUsed 2 MG 2 2)
+                )
+            )
+
+
+        A3
+            (if
+                (HasFaces pyramid (and triangle1 triangle2 triangle3 triangle4 square1))
+                (and
+                    (ComplexityMeasure aaag 6 7)
+                    (SkillUsed 2 MG 2 1)
+                )
+            )
+
+
+    }
+
+ :answer-variables [?x ?y ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (Is2DRepresentationOf ?x ?y) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name BasicQuestion1
+ :assumptions
+    {
+        A0 (HaveSameAngle line1 line2)
+
+        A1 (forall (?line1 ?line2)
+                    (if
+                        (not (Intersecting ?line1 ?line2))
+
+                        (and
+                            (AreParallel ?line1 ?line2)
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaaa 3 6)
+                            (SkillUsed 4 GM 3 1)
+                        )
+                    )
+            )
+
+        A2
+            (forall (?line1 ?line2)
+                    (if
+                        (HaveSameAngle ?line1 ?line2)
+                        (and
+                            (not (Intersecting ?line1 ?line2))
+                            (ComplexityMeasure aaab 3 6)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?x ?y ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (AreParallel ?x ?y) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name BasicQuestion2
+ :assumptions
+    {
+        A0 (and
+               (NumberOfSides optionFigure 4)
+               (AllSidesAreEqualLength optionFigure)
+               (NumberOfRightAngles optionFigure 4)
+           )
+
+        A1 (forall (?figure1)
+                    (if
+                        (and
+                            (NumberOfSides ?figure1 4)
+                            (AllSidesAreEqualLength ?figure1)
+                            (NumberOfRightAngles ?figure1 4)
+                        )
+
+                        (and
+                            (IsShape ?figure1 square)
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaaa 2 11)
+                            (SkillUsed 4 GM 3 8)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?x ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (IsShape ?x square) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name ProficientQuestion1
+ :assumptions
+    {
+        A0 (and
+               (IsHorizontalSegment questionSegment)
+               (LineSegmentEndpoints questionSegment leftPoint1 rightPoint1)
+               (PointCoordinatesAre leftPoint1 2 1)
+               (PointCoordinatesAre rightPoint1 6 1)
+           )
+
+        A1 (forall (?lineSegment)
+                    (if
+                        (and
+                            (IsHorizontalSegment ?lineSegment)
+                            (LineSegmentEndpoints ?lineSegment ?leftPoint ?rightPoint)
+                            (PointCoordinatesAre ?leftPoint ?x1 ?y1)
+                            (PointCoordinatesAre ?rightPoint ?x2 ?y2)
+                        )
+
+                        (and
+                            (Length ?lineSegment ($$difference ?x2 ?x1))
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaaa 4 17)
+                            (SkillUsed 4 GM 2 2)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?x ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (Length questionSegment ?x) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name ProficientQuestion2
+ :assumptions
+    {
+        A0 (and
+               (IsVerticalSegment questionSegment)
+               (LineSegmentEndpoints questionSegment topPoint1 bottomPoint1)
+               (PointCoordinatesAre topPoint1 3 4)
+               (PointCoordinatesAre bottomPoint1 3 -5)
+           )
+
+        A1 (forall (?lineSegment)
+                    (if
+                        (and
+                            (IsVerticalSegment ?lineSegment)
+                            (LineSegmentEndpoints ?lineSegment ?topPoint ?bottomPoint)
+                            (PointCoordinatesAre ?topPoint ?x1 ?y1)
+                            (PointCoordinatesAre ?bottomPoint ?x2 ?y2)
+                        )
+
+                        (and
+                            (Length ?lineSegment ($$difference ?y1 ?y2))
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaaa 4 17)
+                            (SkillUsed 4 GM 2 3)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?x ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (Length questionSegment ?x) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name AdvancedQuestion1
+ :assumptions
+    {
+    A0 (and
+            (IsRectangle rect1)
+            (IsRectLengthOf 15 rect1)
+            (IsRectWidthOf 4 rect1)
+            (IsRectangle rect2)
+            (IsRectLengthOf 20 rect2)
+            (IsRectWidthOf 3 rect2)
+       )
+
+    A1 (forall (?Rectangle ?RectLength ?RectWidth)
+            (if
+                (and
+                    (IsRectangle ?Rectangle)
+                    (IsRectLengthOf ?RectLength ?Rectangle)
+                    (IsRectWidthOf ?RectWidth ?Rectangle)
+                )
+                (and
+                    (IsAreaOf ($$product ?RectLength ?RectWidth) ?Rectangle)
+                    ;;(ArtifactExists product ?RectLength ?RectWidth ($$product ?RectLength ?RectWidth))
+                    (ComplexityMeasure aaaa 4 13)
+                    (SkillUsed 4 GM 1 4)
+                )
+            )
+        )
+
+    A2 (forall (?Rectangle ?RectLength ?RectWidth)
+            (if
+                (and
+                    (IsRectangle ?Rectangle)
+                    (IsRectLengthOf ?RectLength ?Rectangle)
+                    (IsRectWidthOf ?RectWidth ?Rectangle)
+                )
+                (and
+                    (IsPerimeterOf ($$sum ($$product ?RectLength 2) ($$product ?RectWidth 2) ) ?Rectangle)
+                    ;;(ArtifactExists product ?RectLength ?RectWidth ($$product ?RectLength ?RectWidth))
+                    (ComplexityMeasure aaaa 4 15)
+                    (SkillUsed 4 GM 1 4)
+                )
+            )
+        )
+
+    }
+
+ :answer-variables [?x ?y ?e ?f ?g]
+
+ :answers-expected ( )
+
+ :goal (and
+            (IsAreaOf ?x rect1)
+            (IsAreaOf ?y rect2)
+            (= ?x ?y)
+            ;;(ArtifactExists ?a ?b ?c ?d)
+            (ComplexityMeasure ?e ?f ?g)
+       )
+}
+
+{:name AdvancedQuestion2
+ :assumptions
+    {
+        A0 (and
+               (IsVerticalSegment questionSegment)
+               (LineSegmentEndpoints questionSegment topPoint1 bottomPoint1)
+               (PointCoordinatesAre topPoint1 5 8)
+               (PointCoordinatesAre bottomPoint1 5 1)
+           )
+
+        A1 (forall (?lineSegment)
+                    (if
+                        (and
+                            (IsVerticalSegment ?lineSegment)
+                            (LineSegmentEndpoints ?lineSegment ?topPoint ?bottomPoint)
+                            (PointCoordinatesAre ?topPoint ?x1 ?y1)
+                            (PointCoordinatesAre ?bottomPoint ?x2 ?y2)
+                        )
+
+                        (and
+                            (Length ?lineSegment ($$difference ?y1 ?y2))
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaaa 4 17)
+                            (SkillUsed 4 GM 2 3)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?x ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (Length questionSegment ?x) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name AdvancedQuestion3
+ :assumptions
+    {
+        A0 (and
+               (IsCenterPointOf pointO questionCircle)
+               (LineSegmentEndpoints lineSegmentAB pointA pointB)
+               (IsOnCircle pointA questionCircle)
+               (IsOnCircle pointB questionCircle)
+               (SegmentPassesThrough lineSegmentAB pointO)
+           )
+
+        A1 (forall (?circle ?centerPoint ?lineSegment)
+                    (if
+                        (and
+                            (IsCenterPointOf ?centerPoint ?circle)
+                            (LineSegmentEndpoints ?lineSegment ?point1 ?point2)
+                            (IsOnCircle ?point1 ?circle)
+                            (IsOnCircle ?point2 ?circle)
+                            (SegmentPassesThrough ?lineSegment ?centerPoint)
+                        )
+
+                        (and
+                            (IsDiameterOf ?lineSegment ?circle)
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaaa 4 19)
+                            (SkillUsed 4 GM 3 2)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?x ?y ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (IsDiameterOf ?x ?y) (SkillUsed ?a ?b ?c ?d))
+}
+
+{:name AdvancedQuestion4
+ :assumptions
+    {
+        A0 (and
+               (NumberOfSides optionFigure 3)
+               (AllSidesAreEqualLength optionFigure)
+           )
+
+        A1 (forall (?figure1)
+                    (if
+                        (and
+                            (NumberOfSides ?figure1 3)
+                            (AllSidesAreEqualLength ?figure1)
+                        )
+
+                        (and
+                            (IsShape ?figure1 equilateralTriangle)
+                            ;;(ArtifactExists none none none none)
+                            (ComplexityMeasure aaaa 2 8)
+                            (SkillUsed 4 GM 3 7)
+                        )
+                    )
+            )
+
+    }
+
+ :answer-variables [?x ?a ?b ?c ?d]
+
+ :answers-expected ( )
+
+ :goal  (and (IsShape ?x equilateralTriangle) (SkillUsed ?a ?b ?c ?d))
+}

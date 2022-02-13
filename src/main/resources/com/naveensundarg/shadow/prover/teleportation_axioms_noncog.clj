@@ -42,7 +42,7 @@
 }
 
 {:name A_User_Study_on_Visualization_of_Agent_Migration_between_Two_Companion_Robots
- :description "This formalism is for the idea of teleportation cues, specifically migrating faces"
+ :description "This formalism is for the idea of teleportation cues, specifically migrating faces. May not be significant."
  :assumptions
     { C1 (and
              (IsTeleportationCue movingFace)
