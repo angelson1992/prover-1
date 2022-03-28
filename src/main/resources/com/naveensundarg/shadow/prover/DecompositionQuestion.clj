@@ -384,19 +384,19 @@
 
     }
 
- :answer-variables [?a ?b ?c ?d]
+ :answer-variables [?a ?b]
 
  :answers-expected ( )
 
- :goal (and (AreCongruent ?x ?y) (SkillUsed ?a ?b ?c ?d))
+ :goal (AreCongruent ?x ?y)
 }
 
 {:name BelowBasicQuestion2
  :assumptions
     {
         A0 (and
-                (HasFaces pyramid (and triangle1 triangle2 triangle3 triangle4 square1))
-                (IsComposedOf optionFigure (and triangle1 triangle2 triangle3 triangle4 square1))
+                (HasFaces pyramid fourTriangleOneSquare)
+                (IsComposedOf optionFigure fourTriangleOneSquare)
            )
 
         A1 (forall (?figure1 ?solid1)
@@ -416,9 +416,9 @@
 
         A2
             (if
-                (IsComposedOf optionFigure (and triangle1 triangle2 triangle3 triangle4 square1))
+                (IsComposedOf optionFigure fourTriangleOneSquare)
                 (and
-                    (ComplexityMeasure aaaf 6 7)
+                    (ComplexityMeasure aaaf 2 2)
                     (SkillUsed 2 MG 2 2)
                 )
             )
@@ -426,9 +426,9 @@
 
         A3
             (if
-                (HasFaces pyramid (and triangle1 triangle2 triangle3 triangle4 square1))
+                (HasFaces pyramid fourTriangleOneSquare)
                 (and
-                    (ComplexityMeasure aaag 6 7)
+                    (ComplexityMeasure aaag 2 2)
                     (SkillUsed 2 MG 2 1)
                 )
             )
@@ -436,11 +436,11 @@
 
     }
 
- :answer-variables [?x ?y ?a ?b ?c ?d]
+ :answer-variables [?x ?y]
 
  :answers-expected ( )
 
- :goal  (and (Is2DRepresentationOf ?x ?y) (SkillUsed ?a ?b ?c ?d))
+ :goal  (Is2DRepresentationOf ?x ?y)
 }
 
 {:name BasicQuestion1
@@ -474,11 +474,11 @@
 
     }
 
- :answer-variables [?x ?y ?a ?b ?c ?d]
+ :answer-variables [?x ?y]
 
  :answers-expected ( )
 
- :goal  (and (AreParallel ?x ?y) (SkillUsed ?a ?b ?c ?d))
+ :goal  (AreParallel ?x ?y)
 }
 
 {:name BasicQuestion2
@@ -509,11 +509,11 @@
 
     }
 
- :answer-variables [?x ?a ?b ?c ?d]
+ :answer-variables [?x]
 
  :answers-expected ( )
 
- :goal  (and (IsShape ?x square) (SkillUsed ?a ?b ?c ?d))
+ :goal  (IsShape ?x square)
 }
 
 {:name ProficientQuestion1
@@ -546,11 +546,11 @@
 
     }
 
- :answer-variables [?x ?a ?b ?c ?d]
+ :answer-variables [?x]
 
  :answers-expected ( )
 
- :goal  (and (Length questionSegment ?x) (SkillUsed ?a ?b ?c ?d))
+ :goal  (Length questionSegment ?x)
 }
 
 {:name ProficientQuestion2
@@ -583,11 +583,11 @@
 
     }
 
- :answer-variables [?x ?a ?b ?c ?d]
+ :answer-variables [?x]
 
  :answers-expected ( )
 
- :goal  (and (Length questionSegment ?x) (SkillUsed ?a ?b ?c ?d))
+ :goal  (Length questionSegment ?x)
 }
 
 {:name AdvancedQuestion1
@@ -618,25 +618,25 @@
             )
         )
 
-    A2 (forall (?Rectangle ?RectLength ?RectWidth)
-            (if
-                (and
-                    (IsRectangle ?Rectangle)
-                    (IsRectLengthOf ?RectLength ?Rectangle)
-                    (IsRectWidthOf ?RectWidth ?Rectangle)
-                )
-                (and
-                    (IsPerimeterOf ($$sum ($$product ?RectLength 2) ($$product ?RectWidth 2) ) ?Rectangle)
-                    ;;(ArtifactExists product ?RectLength ?RectWidth ($$product ?RectLength ?RectWidth))
-                    (ComplexityMeasure aaaa 4 15)
-                    (SkillUsed 4 GM 1 4)
-                )
-            )
-        )
+    ;;A2 (forall (?Rectangle ?RectLength ?RectWidth)
+    ;;        (if
+    ;;            (and
+    ;;                (IsRectangle ?Rectangle)
+    ;;                (IsRectLengthOf ?RectLength ?Rectangle)
+    ;;                (IsRectWidthOf ?RectWidth ?Rectangle)
+    ;;            )
+    ;;            (and
+    ;;                (IsPerimeterOf ($$sum ($$product ?RectLength 2) ($$product ?RectWidth 2) ) ?Rectangle)
+    ;;                ;;(ArtifactExists product ?RectLength ?RectWidth ($$product ?RectLength ?RectWidth))
+    ;;                (ComplexityMeasure aaab 4 15)
+    ;;                (SkillUsed 4 GM 1 4)
+    ;;            )
+    ;;        )
+    ;;    )
 
     }
 
- :answer-variables [?x ?y ?e ?f ?g]
+ :answer-variables [?x ?y]
 
  :answers-expected ( )
 
@@ -645,7 +645,6 @@
             (IsAreaOf ?y rect2)
             (= ?x ?y)
             ;;(ArtifactExists ?a ?b ?c ?d)
-            (ComplexityMeasure ?e ?f ?g)
        )
 }
 
@@ -679,11 +678,11 @@
 
     }
 
- :answer-variables [?x ?a ?b ?c ?d]
+ :answer-variables [?x]
 
  :answers-expected ( )
 
- :goal  (and (Length questionSegment ?x) (SkillUsed ?a ?b ?c ?d))
+ :goal  (Length questionSegment ?x)
 }
 
 {:name AdvancedQuestion3
@@ -718,11 +717,11 @@
 
     }
 
- :answer-variables [?x ?y ?a ?b ?c ?d]
+ :answer-variables [?x ?y]
 
  :answers-expected ( )
 
- :goal  (and (IsDiameterOf ?x ?y) (SkillUsed ?a ?b ?c ?d))
+ :goal  (IsDiameterOf ?x ?y)
 }
 
 {:name AdvancedQuestion4
@@ -731,6 +730,8 @@
         A0 (and
                (NumberOfSides optionFigure 3)
                (AllSidesAreEqualLength optionFigure)
+               (NumberOfAngles optionFigure 3)
+               (AllAnglesAreAcute optionFigure)
            )
 
         A1 (forall (?figure1)
@@ -738,12 +739,14 @@
                         (and
                             (NumberOfSides ?figure1 3)
                             (AllSidesAreEqualLength ?figure1)
+                            (NumberOfAngles ?figure1 3)
+                            (AllAnglesAreAcute ?figure1)
                         )
 
                         (and
                             (IsShape ?figure1 equilateralTriangle)
                             ;;(ArtifactExists none none none none)
-                            (ComplexityMeasure aaaa 2 8)
+                            (ComplexityMeasure aaaa 2 13)
                             (SkillUsed 4 GM 3 7)
                         )
                     )
@@ -751,9 +754,9 @@
 
     }
 
- :answer-variables [?x ?a ?b ?c ?d]
+ :answer-variables [?x]
 
  :answers-expected ( )
 
- :goal  (and (IsShape ?x equilateralTriangle) (SkillUsed ?a ?b ?c ?d))
+ :goal  (IsShape ?x equilateralTriangle)
 }

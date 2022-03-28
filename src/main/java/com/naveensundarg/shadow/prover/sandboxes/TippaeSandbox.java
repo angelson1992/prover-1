@@ -8,10 +8,10 @@ import com.naveensundarg.shadow.prover.representations.formula.Formula;
 import com.naveensundarg.shadow.prover.representations.value.Value;
 import com.naveensundarg.shadow.prover.representations.value.Variable;
 import com.naveensundarg.shadow.prover.utils.*;
+import com.naveensundarg.shadow.prover.utils.Reader;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.File;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 import static us.bpsm.edn.Keyword.newKeyword;
@@ -21,15 +21,35 @@ import static us.bpsm.edn.Keyword.newKeyword;
  */
 public class TippaeSandbox {
 
-    private static SnarkWrapper snarkProver = SnarkWrapper.getInstance();
-
+    private static SnarkWrapper snarkProver;
 
     private static boolean isCognitiveProof = false; //Set this variable to determine if using Cognitive prover or only Snark
-    private static int specificTestNumber = 12; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
+    private static int specificTestNumber = 4; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
+    private static boolean redirectConsole = false;
+    private static String logLocation = "consoleCout.log";
+    private static boolean readLogMode = false;
+
+    private static int RefutationCount = 0;
+    private static int RowCount = 0;
+    private static int ProofSymbolCount = 0;
 
     public static void main(String[] args) throws Exception {
 
-        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../DecompositionQuestion.clj"));
+        if(readLogMode) {
+            String rawConsole = fileToString(logLocation);
+            parseSExpr(rawConsole.substring(0, rawConsole.lastIndexOf(")")));
+            System.out.println(ProofSymbolCount-RowCount);
+        }
+
+        if(redirectConsole) {
+            File coutCapture = new File(logLocation);
+            PrintStream logger = new PrintStream(coutCapture);
+            System.setOut(logger);
+        }
+
+        snarkProver = SnarkWrapper.getInstance();
+
+        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../teleportation_axioms_noncog.clj"));
 
         for (int i = 0; i < tests.size(); i++) {
 
@@ -93,6 +113,65 @@ public class TippaeSandbox {
 
             }
 
+        }
+
+    }
+
+    private static String fileToString(String input){
+
+        String fileAsString = "";
+        try (BufferedReader br = new BufferedReader(new FileReader(logLocation))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                fileAsString = fileAsString + line;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return fileAsString;
+    }
+
+    private static String parseSExpr(String input){
+
+        input = input.trim();
+        //System.out.println(input);
+
+        if(input.isEmpty()){
+            return input;
+        }
+        else if(input.startsWith("(")){
+            return parseSExpr(input.substring(1));
+        }else if(input.startsWith(")")){
+            return input;
+        }else{
+            int skipNumber = 0;
+            int nextSpaceIndex = input.indexOf(" ");
+            int nextOpenParenIndex = input.indexOf("(");
+            if(nextOpenParenIndex < nextSpaceIndex && nextOpenParenIndex != -1){
+                skipNumber = nextOpenParenIndex;
+            }else{
+                skipNumber = nextSpaceIndex;
+            }
+            if(skipNumber <= 0){
+                skipNumber = input.length();
+            }
+
+            if(input.startsWith("Refutation")){
+                RefutationCount++;
+            }
+            if(input.startsWith("Row")){
+                RowCount++;
+            }
+
+            if (!(input.startsWith("Refutation") || input.startsWith("Row"))){
+                System.out.println(input.substring(0, skipNumber));
+                ProofSymbolCount++;
+            }
+
+            return parseSExpr(input.substring(skipNumber));
         }
 
     }

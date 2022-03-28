@@ -10,7 +10,6 @@
             (forall ?trait (exists ?traitType (HasTraitType ?trait ?traitType)))
         )
 
-
      C2 (HasTraitType blackAndYellow color)
 
      C3 (forall [?embodiment1 ?embodiment2 ?trait]
@@ -20,11 +19,9 @@
                      (HasIdentifyingTrait ?embodiment1 ?trait)
                      (HasIdentifyingTrait ?embodiment2 ?trait)
                  )
-
                  (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment2) )
              )
         )
-
 
      C4 (and
             (IsMoreEffectiveThan features color)
@@ -32,9 +29,9 @@
             (IsMoreEffectiveThan features markings)
         )
 
-     ;;A1 (HasIdentifyingTrait (embodiment a) blackAndYellow) ;;at t1
+     A1 (HasIdentifyingTrait (embodiment a) blackAndYellow) ;;at t1
 
-     ;;A2 (HasIdentifyingTrait (embodiment b) blackAndYellow) ;;at t2
+     A2 (HasIdentifyingTrait (embodiment b) blackAndYellow) ;;at t2
 
     }
 
@@ -102,7 +99,6 @@
             )
         )
 
-
      C2 (and
             (HasTraitType friendly personality)
             (PersonalityComponentsAre friendly pleasant motivating)
@@ -115,16 +111,13 @@
                      (HasIdentifyingTrait ?embodiment1 ?trait)
                      (HasIdentifyingTrait ?embodiment2 ?trait)
                  )
-
                  (TeleportedInto (identityOf ?embodiment1) (identityOf ?embodiment2) )
              )
         )
 
-
      A1 (HasIdentifyingTrait (embodiment a) friendly) ;;at t1
 
      A2 (HasIdentifyingTrait (embodiment b) friendly) ;;at t2
-
     }
 
  :goal (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b)) ) ;;at t4
@@ -259,12 +252,10 @@
              (forall ?teleportationCue (exists [?teleCueInit ?teleCueFinish] (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish)))
         )
 
-
       C2 (and
                (TeleportationCueHalves commandTeleport commandTeleInit commandTeleFinish)
                (TeleportationCueHalves requestTeleport requestTeleInit requestTeleFinish)
         )
-
 
       C3 (forall [?embodiment1 ?embodiment2 ?teleportationCue ?teleCueInit ?teleCueFinish ?time]
               (if
@@ -279,15 +270,10 @@
               )
           )
 
-
       A1 (and
             (IsPresentingTeleCue (embodiment a) requestTeleInit) ;;at t2
             (IsPresentingTeleCue (embodiment b) requestTeleFinish)
          )
-
-
-
-
     }
 
  :goal  (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b)) ) ;;at t4
