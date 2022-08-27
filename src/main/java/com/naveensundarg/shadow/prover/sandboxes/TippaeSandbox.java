@@ -24,7 +24,7 @@ public class TippaeSandbox {
     private static SnarkWrapper snarkProver;
 
     private static boolean isCognitiveProof = false; //Set this variable to determine if using Cognitive prover or only Snark
-    private static int specificTestNumber = 4; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
+    private static int specificTestNumber = 10; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
     private static boolean redirectConsole = false;
     private static String logLocation = "consoleCout.log";
     private static boolean readLogMode = false;
@@ -49,7 +49,7 @@ public class TippaeSandbox {
 
         snarkProver = SnarkWrapper.getInstance();
 
-        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../teleportation_axioms_noncog.clj"));
+        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../teleportation_axioms.clj"));
 
         for (int i = 0; i < tests.size(); i++) {
 

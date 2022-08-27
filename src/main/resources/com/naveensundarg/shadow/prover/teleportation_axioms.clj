@@ -290,3 +290,655 @@
 
  :goal  (Believes! human t4 (TeleportedInto (identityOf (embodiment a)) (identityOf (embodiment b)) ))
 }
+
+{:name The_Unified_Theory_Of_Identity_Teleportation_SEC_Version
+ :description ""
+ :assumptions
+    {SC1 (Believes! human t0 (forall [?f ?t]
+                 (implies (and (InitiallyP ?f) (not (Clipped t0 ?f ?t)))
+                          (HoldsAt ?f ?t))))
+
+     SC2 (Believes! human t0 (forall [?t1 ?t2 ?e ?f]
+                 (implies (and (Happens ?e ?t1)
+                               (Initiates ?e ?f ?t1)
+                               (Prior ?t1 ?t2)
+                               (not (Clipped ?t1 ?f ?t2)))
+                          (HoldsAt ?f ?t2))))
+
+     SC3 (Believes! human t0 (forall [?t1 ?f ?t2]
+                 (iff (Clipped ?t1 ?f ?t2)
+                      (exists [?e ?t]
+                              (and (Happens ?e ?t)
+                                   (Prior ?t1 ?t)
+                                   (Prior ?t ?t2)
+                                   (Terminates ?e ?f ?t))))))
+
+     SC4 (Believes! human t0 (and
+            (Prior t0 t1)
+            (Prior t1 t2)
+            (Prior t2 t3)
+            (Prior t3 t4)
+            (Prior t4 t5)
+            (Prior t5 tLast)
+            (forall [?time1 ?time2 ?time3]
+                (implies
+                    (and
+                        (Prior ?time1 ?time2)
+                        (Prior ?time2 ?time3)
+                    )
+                    (Prior ?time1 ?time3)
+                )
+            )
+         ))
+
+     SC5 (Believes! human t0 (forall [?f ?t1 ?t2]
+            (implies
+                (and
+                    (HoldsAt ?f ?t1)
+                    (Prior ?t1 ?t2)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+                (HoldsAt ?f ?t2)
+            )
+         ))
+
+     SC6 (Believes! human t0 (forall [?t0 ?t1 ?f ?t2]
+            (implies
+                (and
+                    (not (Clipped ?t0 ?f ?t2))
+                    (Prior ?t0 ?t1)
+                    (Prior ?t1 ?t2)
+                )
+                (and
+                    (not (Clipped ?t0 ?f ?t1))
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         ))
+
+     SC7 (Believes! human t0 (forall [?t1 ?f ?t2]
+            (implies
+                (HoldsAt ?f ?t1 ?t2)
+                (and
+                    (HoldsAt ?f ?t1)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         ))
+
+     B1 (Believes! human t1 (HoldsAt (HasTrait (embodiment a) wagglesEyebrows) t1)) ;;at t1
+     A1 (Believes! human t1 (HoldsAt (HasTrait (embodiment a) TTSVoiceCarol) t1)) ;;at t1
+     A2 (Believes! human t2 (HoldsAt (HasTrait (embodiment b) TTSVoiceCarol) t2)) ;;at t2
+     B2 (Believes! human t2 (HoldsAt (HasTrait (embodiment b) AngularRoutes) t2)) ;;at t2
+     B3 (Believes! human t3 (HoldsAt (HasTrait (embodiment c) AngularRoutes) t3)) ;;at t3
+
+     A3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t0))
+     AA3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t1))
+     AB3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t2))
+     AC3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t3))
+     ;;AC3 (Believes! human t3 (not (Clipped t0 (IsUniqueIdentifyingTrait TTSVoiceCarol) t3)))
+     B4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t0))
+     BB4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t1))
+     BC4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t2))
+     BD4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t3))
+     ;;AC4 (Believes! human t3 (not (Clipped t0 (IsUniqueIdentifyingTrait AngularRoutes) t3)))
+     ;;T1 (Believes! human t5 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t5) ))
+     ;;T2 (Believes! human t4 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t4) ))
+
+     A4 (Believes! human t1 (and
+          (HoldsAt (IsTeleportationCue movingFace) t1)
+          (HoldsAt (IsTeleCueInit movingFaceInit) t1)
+          (HoldsAt (IsTeleCueFinish movingFaceFinish) t1)
+          (HoldsAt (TeleportationCueHalves movingFace movingFaceInit movingFaceFinish) t1)
+          ;;(HoldsAt (IsTeleportationCue movingBar) t1)
+
+          (HoldsAt (IsTraitType color) t1)
+          (HoldsAt (IsTraitType class) t1)
+          (HoldsAt (IsTraitType features) t1)
+          (HoldsAt (IsTraitType markings) t1)
+          (HoldsAt (IsTraitType voice) t1)
+          (HoldsAt (IsTraitType personality) t1)
+
+          (HoldsAt (IsTrait friendly) t1)
+          (HoldsAt (IsMood pleasant) t1)
+          (HoldsAt (IsInteractionStrategy motivating) t1)
+          (HoldsAt (PersonalityComponentsAre friendly pleasant motivating) t1)
+        ))
+
+
+     A5 (Believes! human t1 (HoldsAt (IsPresentingTeleCue (embodiment a) movingFaceInit) t1))
+     A6 (Believes! human t1 (HoldsAt (IsPresentingTeleCue (embodiment b) movingFaceFinish) t1))
+
+     C1 (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?trait ?time1 ?time2]
+            (if
+                (and
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time1)
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time2)
+                    (HoldsAt (HasTrait ?embodiment1 ?trait) ?time1)
+                    (HoldsAt (HasTrait ?embodiment2 ?trait) ?time2)
+                    (Prior ?time1 ?time2)
+                )
+
+                (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2) ?time2)
+
+            )
+        ))
+
+    C2 (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?teleportationCue ?teleCueInit ?teleCueFinish ?time]
+          (if
+              (and
+                  (HoldsAt (IsTeleportationCue ?teleportationCue) ?time)
+                  (HoldsAt (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment1 ?teleCueInit) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment2 ?teleCueFinish) ?time)
+              )
+
+              (HoldsAt (TeleportationRealization ?embodiment1 ?embodiment2) ?time)
+          )
+       ))
+
+    C3  (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?embodiment3 ?time1 ?time2]
+             (if
+                 (and
+                     (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2 ) ?time1)
+                     (HoldsAt (IdentityRetention ?embodiment2 ?embodiment3 ) ?time2)
+                     (Prior ?time1 ?time2)
+                 )
+
+                 (HoldsAt (IdentityRetention ?embodiment1 ?embodiment3 ) ?time2)
+             )
+        ))
+
+    }
+
+ :goal  (Believes! human t3 (HoldsAt (IdentityRetention (embodiment a) (embodiment c)) t3)) ;;at t
+}
+
+{:name The_Unified_Theory_Of_Identity_Teleportation_SEC_Cognitive_Version
+ :description ""
+ :assumptions
+    {SC1 (Believes! human t0 (forall [?f ?t]
+                 (implies (and (InitiallyP ?f) (not (Clipped t0 ?f ?t)))
+                          (HoldsAt ?f ?t))))
+
+     SC2 (Believes! human t0 (forall [?t1 ?t2 ?e ?f]
+                 (implies (and (Happens ?e ?t1)
+                               (Initiates ?e ?f ?t1)
+                               (Prior ?t1 ?t2)
+                               (not (Clipped ?t1 ?f ?t2)))
+                          (HoldsAt ?f ?t2))))
+
+     SC3 (Believes! human t0 (forall [?t1 ?f ?t2]
+                 (iff (Clipped ?t1 ?f ?t2)
+                      (exists [?e ?t]
+                              (and (Happens ?e ?t)
+                                   (Prior ?t1 ?t)
+                                   (Prior ?t ?t2)
+                                   (Terminates ?e ?f ?t))))))
+
+     SC4 (Believes! human t0 (and
+            (Prior t0 t1)
+            (Prior t1 t2)
+            (Prior t2 t3)
+            (Prior t3 t4)
+            (Prior t4 t5)
+            (Prior t5 tLast)
+            (forall [?time1 ?time2 ?time3]
+                (implies
+                    (and
+                        (Prior ?time1 ?time2)
+                        (Prior ?time2 ?time3)
+                    )
+                    (Prior ?time1 ?time3)
+                )
+            )
+         ))
+
+     SC5 (Believes! human t0 (forall [?f ?t1 ?t2]
+            (implies
+                (and
+                    (HoldsAt ?f ?t1)
+                    (Prior ?t1 ?t2)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+                (HoldsAt ?f ?t2)
+            )
+         ))
+
+     SC6 (Believes! human t0 (forall [?t0 ?t1 ?f ?t2]
+            (implies
+                (and
+                    (not (Clipped ?t0 ?f ?t2))
+                    (Prior ?t0 ?t1)
+                    (Prior ?t1 ?t2)
+                )
+                (and
+                    (not (Clipped ?t0 ?f ?t1))
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         ))
+
+     SC7 (Believes! human t0 (forall [?t1 ?f ?t2]
+            (implies
+                (HoldsAt ?f ?t1 ?t2)
+                (and
+                    (HoldsAt ?f ?t1)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         ))
+
+     B1 (Believes! human t1 (HoldsAt (HasTrait (embodiment a) wagglesEyebrows) t1)) ;;at t1
+     A1 (Believes! human t1 (HoldsAt (HasTrait (embodiment a) TTSVoiceCarol) t1)) ;;at t1
+     A2 (Believes! human t2 (HoldsAt (HasTrait (embodiment b) TTSVoiceCarol) t2)) ;;at t2
+     B2 (Believes! human t2 (HoldsAt (HasTrait (embodiment b) AngularRoutes) t2)) ;;at t2
+     B3 (Believes! human t3 (HoldsAt (HasTrait (embodiment c) AngularRoutes) t3)) ;;at t3
+
+     A3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t0))
+     AA3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t1))
+     AB3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t2))
+     AC3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t3))
+     ;;AC3 (Believes! human t3 (not (Clipped t0 (IsUniqueIdentifyingTrait TTSVoiceCarol) t3)))
+     B4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t0))
+     BB4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t1))
+     BC4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t2))
+     BD4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t3))
+     ;;AC4 (Believes! human t3 (not (Clipped t0 (IsUniqueIdentifyingTrait AngularRoutes) t3)))
+     ;;T1 (Believes! human t5 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t5) ))
+     ;;T2 (Believes! human t4 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t4) ))
+
+     A4 (Believes! human t1 (and
+          (HoldsAt (IsTeleportationCue movingFace) t1)
+          (HoldsAt (IsTeleCueInit movingFaceInit) t1)
+          (HoldsAt (IsTeleCueFinish movingFaceFinish) t1)
+          (HoldsAt (TeleportationCueHalves movingFace movingFaceInit movingFaceFinish) t1)
+          ;;(HoldsAt (IsTeleportationCue movingBar) t1)
+
+          (HoldsAt (IsTraitType color) t1)
+          (HoldsAt (IsTraitType class) t1)
+          (HoldsAt (IsTraitType features) t1)
+          (HoldsAt (IsTraitType markings) t1)
+          (HoldsAt (IsTraitType voice) t1)
+          (HoldsAt (IsTraitType personality) t1)
+
+          (HoldsAt (IsTrait friendly) t1)
+          (HoldsAt (IsMood pleasant) t1)
+          (HoldsAt (IsInteractionStrategy motivating) t1)
+          (HoldsAt (PersonalityComponentsAre friendly pleasant motivating) t1)
+        ))
+
+
+     A5 (Believes! human t1 (HoldsAt (IsPresentingTeleCue (embodiment a) movingFaceInit) t1))
+     A6 (Believes! human t1 (HoldsAt (IsPresentingTeleCue (embodiment b) movingFaceFinish) t1))
+
+     C1 (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?trait ?time1 ?time2]
+            (if
+                (and
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time1)
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time2)
+                    (HoldsAt (HasTrait ?embodiment1 ?trait) ?time1)
+                    (HoldsAt (HasTrait ?embodiment2 ?trait) ?time2)
+                    (Prior ?time1 ?time2)
+                )
+
+                (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2) ?time2)
+
+            )
+        ))
+
+    C2 (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?teleportationCue ?teleCueInit ?teleCueFinish ?time]
+          (if
+              (and
+                  (HoldsAt (IsTeleportationCue ?teleportationCue) ?time)
+                  (HoldsAt (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment1 ?teleCueInit) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment2 ?teleCueFinish) ?time)
+              )
+
+              (HoldsAt (TeleportationRealization ?embodiment1 ?embodiment2) ?time)
+          )
+       ))
+
+    C3  (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?embodiment3 ?time1 ?time2]
+             (if
+                 (and
+                     (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2 ) ?time1)
+                     (HoldsAt (IdentityRetention ?embodiment2 ?embodiment3 ) ?time2)
+                     (Prior ?time1 ?time2)
+                 )
+
+                 (HoldsAt (IdentityRetention ?embodiment1 ?embodiment3 ) ?time2)
+             )
+        ))
+
+    }
+
+ :goal  (Believes! human t3 (HoldsAt (IdentityRetention (embodiment a) (embodiment c)) t3)) ;;at t
+}
+
+{:name The_Unified_Theory_Of_Identity_Teleportation_SEC_Cognitive_Version_ISAMI_Simulated_Scenario
+ :description ""
+ :assumptions
+    {SC1 (Believes! human t0 (forall [?f ?t]
+                 (implies (and (InitiallyP ?f) (not (Clipped t0 ?f ?t)))
+                          (HoldsAt ?f ?t))))
+
+     SC2 (Believes! human t0 (forall [?t1 ?t2 ?e ?f]
+                 (implies (and (Happens ?e ?t1)
+                               (Initiates ?e ?f ?t1)
+                               (Prior ?t1 ?t2)
+                               (not (Clipped ?t1 ?f ?t2)))
+                          (HoldsAt ?f ?t2))))
+
+     SC3 (Believes! human t0 (forall [?t1 ?f ?t2]
+                 (iff (Clipped ?t1 ?f ?t2)
+                      (exists [?e ?t]
+                              (and (Happens ?e ?t)
+                                   (Prior ?t1 ?t)
+                                   (Prior ?t ?t2)
+                                   (Terminates ?e ?f ?t))))))
+
+     SC4 (Believes! human t0 (and
+            (Prior t0 t1)
+            (Prior t1 t2)
+            (Prior t2 t3)
+            (Prior t3 t4)
+            (Prior t4 t5)
+            (Prior t5 tLast)
+            (forall [?time1 ?time2 ?time3]
+                (implies
+                    (and
+                        (Prior ?time1 ?time2)
+                        (Prior ?time2 ?time3)
+                    )
+                    (Prior ?time1 ?time3)
+                )
+            )
+         ))
+
+     SC5 (Believes! human t0 (forall [?f ?t1 ?t2]
+            (implies
+                (and
+                    (HoldsAt ?f ?t1)
+                    (Prior ?t1 ?t2)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+                (HoldsAt ?f ?t2)
+            )
+         ))
+
+     SC6 (Believes! human t0 (forall [?t0 ?t1 ?f ?t2]
+            (implies
+                (and
+                    (not (Clipped ?t0 ?f ?t2))
+                    (Prior ?t0 ?t1)
+                    (Prior ?t1 ?t2)
+                )
+                (and
+                    (not (Clipped ?t0 ?f ?t1))
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         ))
+
+     SC7 (Believes! human t0 (forall [?t1 ?f ?t2]
+            (implies
+                (HoldsAt ?f ?t1 ?t2)
+                (and
+                    (HoldsAt ?f ?t1)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         ))
+
+     B1 (Believes! human t1 (HoldsAt (HasTrait (embodiment a) wagglesEyebrows) t1)) ;;at t1
+     A1 (Believes! human t1 (HoldsAt (HasTrait (embodiment a) TTSVoiceCarol) t1)) ;;at t1
+     A2 (Believes! human t2 (HoldsAt (HasTrait (embodiment b) TTSVoiceCarol) t2)) ;;at t2
+     B2 (Believes! human t2 (HoldsAt (HasTrait (embodiment b) AngularRoutes) t2)) ;;at t2
+     B3 (Believes! human t3 (HoldsAt (HasTrait (embodiment c) AngularRoutes) t3)) ;;at t3
+
+     A3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t0))
+     AA3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t1))
+     AB3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t2))
+     AC3 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t3))
+     ;;AC3 (Believes! human t3 (not (Clipped t0 (IsUniqueIdentifyingTrait TTSVoiceCarol) t3)))
+     B4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t0))
+     BB4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t1))
+     BC4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t2))
+     BD4 (Believes! human t0 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t3))
+     ;;AC4 (Believes! human t3 (not (Clipped t0 (IsUniqueIdentifyingTrait AngularRoutes) t3)))
+     ;;T1 (Believes! human t5 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t5) ))
+     ;;T2 (Believes! human t4 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t4) ))
+
+     A4 (Believes! human t1 (and
+          (HoldsAt (IsTeleportationCue movingFace) t1)
+          (HoldsAt (IsTeleCueInit movingFaceInit) t1)
+          (HoldsAt (IsTeleCueFinish movingFaceFinish) t1)
+          (HoldsAt (TeleportationCueHalves movingFace movingFaceInit movingFaceFinish) t1)
+          ;;(HoldsAt (IsTeleportationCue movingBar) t1)
+
+          (HoldsAt (IsTraitType color) t1)
+          (HoldsAt (IsTraitType class) t1)
+          (HoldsAt (IsTraitType features) t1)
+          (HoldsAt (IsTraitType markings) t1)
+          (HoldsAt (IsTraitType voice) t1)
+          (HoldsAt (IsTraitType personality) t1)
+
+          (HoldsAt (IsTrait friendly) t1)
+          (HoldsAt (IsMood pleasant) t1)
+          (HoldsAt (IsInteractionStrategy motivating) t1)
+          (HoldsAt (PersonalityComponentsAre friendly pleasant motivating) t1)
+        ))
+
+
+     A5 (Believes! human t1 (HoldsAt (IsPresentingTeleCue (embodiment a) movingFaceInit) t1))
+     A6 (Believes! human t1 (HoldsAt (IsPresentingTeleCue (embodiment b) movingFaceFinish) t1))
+
+     C1 (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?trait ?time1 ?time2]
+            (if
+                (and
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time1)
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time2)
+                    (HoldsAt (HasTrait ?embodiment1 ?trait) ?time1)
+                    (HoldsAt (HasTrait ?embodiment2 ?trait) ?time2)
+                    (Prior ?time1 ?time2)
+                )
+
+                (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2) ?time2)
+
+            )
+        ))
+
+    C2 (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?teleportationCue ?teleCueInit ?teleCueFinish ?time]
+          (if
+              (and
+                  (HoldsAt (IsTeleportationCue ?teleportationCue) ?time)
+                  (HoldsAt (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment1 ?teleCueInit) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment2 ?teleCueFinish) ?time)
+              )
+
+              (HoldsAt (TeleportationRealization ?embodiment1 ?embodiment2) ?time)
+          )
+       ))
+
+    C3  (Believes! human t0 (forall [?embodiment1 ?embodiment2 ?embodiment3 ?time1 ?time2]
+             (if
+                 (and
+                     (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2 ) ?time1)
+                     (HoldsAt (IdentityRetention ?embodiment2 ?embodiment3 ) ?time2)
+                     (Prior ?time1 ?time2)
+                 )
+
+                 (HoldsAt (IdentityRetention ?embodiment1 ?embodiment3 ) ?time2)
+             )
+        ))
+
+    }
+
+ :goal  (Believes! human t3 (HoldsAt (IdentityRetention (embodiment a) (embodiment c)) t3)) ;;at t
+}
+
+{:name The_True_Unified_Theory_Of_Identity_Teleportation_SEC
+ :description ""
+ :assumptions
+    {SC1 (forall [?f ?t]
+                 (implies (and (InitiallyP ?f) (not (Clipped t0 ?f ?t)))
+                          (HoldsAt ?f ?t)))
+
+     SC2 (forall [?t1 ?t2 ?e ?f]
+                 (implies (and (Happens ?e ?t1)
+                               (Initiates ?e ?f ?t1)
+                               (Prior ?t1 ?t2)
+                               (not (Clipped ?t1 ?f ?t2)))
+                          (HoldsAt ?f ?t2)))
+
+     SC3 (forall [?t1 ?f ?t2]
+                 (iff (Clipped ?t1 ?f ?t2)
+                      (exists [?e ?t]
+                              (and (Happens ?e ?t)
+                                   (Prior ?t1 ?t)
+                                   (Prior ?t ?t2)
+                                   (Terminates ?e ?f ?t)))))
+
+     SC4 (and
+            (Prior t0 t1)
+            (Prior t1 t2)
+            (Prior t2 t3)
+            (Prior t3 t4)
+            (Prior t4 t5)
+            (Prior t5 tLast)
+            (forall [?time1 ?time2 ?time3]
+                (implies
+                    (and
+                        (Prior ?time1 ?time2)
+                        (Prior ?time2 ?time3)
+                    )
+                    (Prior ?time1 ?time3)
+                )
+            )
+         )
+
+     SC5 (forall [?f ?t1 ?t2]
+            (implies
+                (and
+                    (HoldsAt ?f ?t1)
+                    (Prior ?t1 ?t2)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+                (HoldsAt ?f ?t2)
+            )
+         )
+
+     SC6 (forall [?t0 ?t1 ?f ?t2]
+            (implies
+                (and
+                    (not (Clipped ?t0 ?f ?t2))
+                    (Prior ?t0 ?t1)
+                    (Prior ?t1 ?t2)
+                )
+                (and
+                    (not (Clipped ?t0 ?f ?t1))
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         )
+
+     SC7 (forall [?t1 ?f ?t2]
+            (implies
+                (HoldsAt ?f ?t1 ?t2)
+                (and
+                    (HoldsAt ?f ?t1)
+                    (not (Clipped ?t1 ?f ?t2))
+                )
+            )
+         )
+
+     B1 (HoldsAt (HasTrait (embodiment a) wagglesEyebrows) t1) ;;at t1
+     A1 (HoldsAt (HasTrait (embodiment a) TTSVoiceCarol) t1) ;;at t1
+     A2 (HoldsAt (HasTrait (embodiment b) TTSVoiceCarol) t2) ;;at t2
+     B2 (HoldsAt (HasTrait (embodiment b) AngularRoutes) t2) ;;at t2
+     B3 (HoldsAt (HasTrait (embodiment c) AngularRoutes) t3) ;;at t3
+
+     A3 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t0)
+     AA3 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t1)
+     AB3 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t2)
+     AC3 (HoldsAt (IsUniqueIdentifyingTrait TTSVoiceCarol) t3)
+     ;;AC3 (not (Clipped t0 (IsUniqueIdentifyingTrait TTSVoiceCarol) t3))
+     B4 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t0)
+     BB4 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t1)
+     BC4 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t2)
+     BD4 (HoldsAt (IsUniqueIdentifyingTrait AngularRoutes) t3)
+     ;;AC4 (not (Clipped t0 (IsUniqueIdentifyingTrait AngularRoutes) t3))
+     ;;T1 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t5) )
+     ;;T2 (not (Clipped t3 (IdentityRetention (embodiment a) (embodiment c)) t4) )
+
+     A4 (and
+          (HoldsAt (IsTeleportationCue movingFace) t1)
+          (HoldsAt (IsTeleCueInit movingFaceInit) t1)
+          (HoldsAt (IsTeleCueFinish movingFaceFinish) t1)
+          (HoldsAt (TeleportationCueHalves movingFace movingFaceInit movingFaceFinish) t1)
+          ;;(HoldsAt (IsTeleportationCue movingBar) t1)
+
+          (HoldsAt (IsTraitType color) t1)
+          (HoldsAt (IsTraitType class) t1)
+          (HoldsAt (IsTraitType features) t1)
+          (HoldsAt (IsTraitType markings) t1)
+          (HoldsAt (IsTraitType voice) t1)
+          (HoldsAt (IsTraitType personality) t1)
+
+          (HoldsAt (IsTrait friendly) t1)
+          (HoldsAt (IsMood pleasant) t1)
+          (HoldsAt (IsInteractionStrategy motivating) t1)
+          (HoldsAt (PersonalityComponentsAre friendly pleasant motivating) t1)
+        )
+
+
+     A5 (HoldsAt (IsPresentingTeleCue (embodiment a) movingFaceInit) t1)
+     A6 (HoldsAt (IsPresentingTeleCue (embodiment b) movingFaceFinish) t1)
+
+     C1 (forall [?embodiment1 ?embodiment2 ?trait ?time1 ?time2]
+            (if
+                (and
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time1)
+                    (HoldsAt (IsUniqueIdentifyingTrait ?trait) ?time2)
+                    (HoldsAt (HasTrait ?embodiment1 ?trait) ?time1)
+                    (HoldsAt (HasTrait ?embodiment2 ?trait) ?time2)
+                    (Prior ?time1 ?time2)
+                )
+
+                (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2) ?time2)
+
+            )
+        )
+
+    C2 (forall [?embodiment1 ?embodiment2 ?teleportationCue ?teleCueInit ?teleCueFinish ?time]
+          (if
+              (and
+                  (HoldsAt (IsTeleportationCue ?teleportationCue) ?time)
+                  (HoldsAt (TeleportationCueHalves ?teleportationCue ?teleCueInit ?teleCueFinish) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment1 ?teleCueInit) ?time)
+                  (HoldsAt (IsPresentingTeleCue ?embodiment2 ?teleCueFinish) ?time)
+              )
+
+              (HoldsAt (TeleportationRealization ?embodiment1 ?embodiment2) ?time)
+          )
+       )
+
+    C3  (forall [?embodiment1 ?embodiment2 ?embodiment3 ?time1 ?time2]
+             (if
+                 (and
+                     (HoldsAt (IdentityRetention ?embodiment1 ?embodiment2 ) ?time1)
+                     (HoldsAt (IdentityRetention ?embodiment2 ?embodiment3 ) ?time2)
+                     (Prior ?time1 ?time2)
+                 )
+
+                 (HoldsAt (IdentityRetention ?embodiment1 ?embodiment3 ) ?time2)
+             )
+        )
+
+    }
+
+ :goal  (HoldsAt (IdentityRetention (embodiment a) (embodiment c)) t3) ;;at t
+}
