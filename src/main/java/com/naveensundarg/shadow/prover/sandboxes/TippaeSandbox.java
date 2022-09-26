@@ -24,7 +24,7 @@ public class TippaeSandbox {
     private static SnarkWrapper snarkProver;
 
     private static boolean isCognitiveProof = false; //Set this variable to determine if using Cognitive prover or only Snark
-    private static int specificTestNumber = 6; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
+    private static int specificTestNumber = 4; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
     private static boolean redirectConsole = true;
     private static String logLocation = "consoleCout.log";
     private static boolean readLogMode = true; //Sets whether or not to print out a count of the proof symbols currently in the log file. Note: Happens before reasoning.
@@ -37,6 +37,7 @@ public class TippaeSandbox {
     private static int SnarkNounInteractivityCount = 0;
     private static int SNIC_tempVar = 0;
     private static int currentParserLevel = 0;
+    private static int completeProofSymbolCount = 0;
 
     public static void main(String[] args) throws Exception {
 
@@ -119,10 +120,13 @@ public class TippaeSandbox {
             System.setOut(originalCout);
             String rawConsole = fileToString(logLocation);
             parseSExpr(rawConsole.substring(0, rawConsole.lastIndexOf(")")));
-            System.out.println( "TotalCharacterProofCount is: " + String.valueOf(rawConsole.length()) + "\n" +
-                    "SanitizedSymbolCount is: " + String.valueOf(ProofSymbolCount) + "\n" +
-                    "ShadowProverExtendedProofLength is: " + String.valueOf(ProofSymbolCount - RowCount) + "\n" +
-                    "ShadowProverExtendedItemInteractivity is: " + String.valueOf(SnarkNounCount));
+            System.out.println( "TotalCharacterProofCount is: " + (rawConsole.length()) + "\n" +
+                    "ShadowProverCompleteSymbolCount is: " + (completeProofSymbolCount) + "\n" +
+                    "ShadowProverSanitizedSymbolCount is: " + (ProofSymbolCount) + "\n" +
+                    "ShadowProverExtendedProofLength is: " + (ProofSymbolCount - RowCount) + "\n" +
+                    "ShadowProverMaxItemInteractivity is: " + (SnarkNounMaxInteractivityCount) + "\n" +
+                    "ShadowProverItemInteractivity is: " + (SnarkNounInteractivityCount) + "\n" +
+                    "ShadowProverItemCount is: " + (SnarkNounCount));
         }
 
     }
@@ -154,9 +158,11 @@ public class TippaeSandbox {
         }
         else if(input.startsWith("(")){
             currentParserLevel++;
+            completeProofSymbolCount++;
             return parseSExpr(input.substring(1));
         }else if(input.startsWith(")")){
             currentParserLevel--;
+            completeProofSymbolCount++;
             if(currentParserLevel < 3){
                 if(SNIC_tempVar > SnarkNounMaxInteractivityCount){
                     SnarkNounMaxInteractivityCount = SNIC_tempVar;
@@ -188,9 +194,11 @@ public class TippaeSandbox {
 
             if(input.startsWith("Refutation")){
                 RefutationCount++;
+                completeProofSymbolCount++;
             }
             if(input.startsWith("Row")){
                 RowCount++;
+                completeProofSymbolCount++;
             }
             if(input.startsWith("SNARK::")){
                 SnarkNounCount++;
@@ -201,6 +209,7 @@ public class TippaeSandbox {
             if (!(input.startsWith("Refutation") || input.startsWith("Row"))){
                 System.out.println(input.substring(0, skipNumber));
                 ProofSymbolCount++;
+                completeProofSymbolCount++;
             }
 
             return parseSExpr(input.substring(skipNumber));
