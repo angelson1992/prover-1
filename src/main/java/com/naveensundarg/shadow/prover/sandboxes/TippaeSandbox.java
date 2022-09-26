@@ -24,23 +24,23 @@ public class TippaeSandbox {
     private static SnarkWrapper snarkProver;
 
     private static boolean isCognitiveProof = false; //Set this variable to determine if using Cognitive prover or only Snark
-    private static int specificTestNumber = 10; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
-    private static boolean redirectConsole = false;
+    private static int specificTestNumber = 6; //Set this int to -1 to run all test, set from 0 to NumberOfTest-1 to indicate which test to run
+    private static boolean redirectConsole = true;
     private static String logLocation = "consoleCout.log";
-    private static boolean readLogMode = false;
+    private static boolean readLogMode = true; //Sets whether or not to print out a count of the proof symbols currently in the log file. Note: Happens before reasoning.
 
     private static int RefutationCount = 0;
     private static int RowCount = 0;
     private static int ProofSymbolCount = 0;
+    private static int SnarkNounCount = 0;
+    private static int SnarkNounMaxInteractivityCount = 0;
+    private static int SnarkNounInteractivityCount = 0;
+    private static int SNIC_tempVar = 0;
+    private static int currentParserLevel = 0;
 
     public static void main(String[] args) throws Exception {
 
-        if(readLogMode) {
-            String rawConsole = fileToString(logLocation);
-            parseSExpr(rawConsole.substring(0, rawConsole.lastIndexOf(")")));
-            System.out.println(ProofSymbolCount-RowCount);
-        }
-
+        PrintStream originalCout = System.out;
         if(redirectConsole) {
             File coutCapture = new File(logLocation);
             PrintStream logger = new PrintStream(coutCapture);
@@ -49,7 +49,7 @@ public class TippaeSandbox {
 
         snarkProver = SnarkWrapper.getInstance();
 
-        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../teleportation_axioms.clj"));
+        List<Problem> tests = ProblemReader.readFrom(TippaeSandbox.class.getResourceAsStream("../DecompositionQuestion.clj"));
 
         for (int i = 0; i < tests.size(); i++) {
 
@@ -115,6 +115,16 @@ public class TippaeSandbox {
 
         }
 
+        if(readLogMode) {
+            System.setOut(originalCout);
+            String rawConsole = fileToString(logLocation);
+            parseSExpr(rawConsole.substring(0, rawConsole.lastIndexOf(")")));
+            System.out.println( "TotalCharacterProofCount is: " + String.valueOf(rawConsole.length()) + "\n" +
+                    "SanitizedSymbolCount is: " + String.valueOf(ProofSymbolCount) + "\n" +
+                    "ShadowProverExtendedProofLength is: " + String.valueOf(ProofSymbolCount - RowCount) + "\n" +
+                    "ShadowProverExtendedItemInteractivity is: " + String.valueOf(SnarkNounCount));
+        }
+
     }
 
     private static String fileToString(String input){
@@ -143,15 +153,32 @@ public class TippaeSandbox {
             return input;
         }
         else if(input.startsWith("(")){
+            currentParserLevel++;
             return parseSExpr(input.substring(1));
         }else if(input.startsWith(")")){
-            return input;
+            currentParserLevel--;
+            if(currentParserLevel < 3){
+                if(SNIC_tempVar > SnarkNounMaxInteractivityCount){
+                    SnarkNounMaxInteractivityCount = SNIC_tempVar;
+                }
+                if(SNIC_tempVar > 0) {
+                    SnarkNounInteractivityCount += SNIC_tempVar - 1;
+                }
+                SNIC_tempVar = 0;
+            }
+            return parseSExpr(input.substring(1));
         }else{
             int skipNumber = 0;
             int nextSpaceIndex = input.indexOf(" ");
             int nextOpenParenIndex = input.indexOf("(");
-            if(nextOpenParenIndex < nextSpaceIndex && nextOpenParenIndex != -1){
-                skipNumber = nextOpenParenIndex;
+            int nextCloseParenIndex = input.indexOf(")");
+            if((nextOpenParenIndex < nextSpaceIndex && nextOpenParenIndex != -1) || (nextCloseParenIndex < nextSpaceIndex && nextCloseParenIndex != -1)){
+                if(nextOpenParenIndex < nextCloseParenIndex && nextOpenParenIndex != -1){
+                    skipNumber = nextOpenParenIndex;
+                }
+                if(nextCloseParenIndex < nextOpenParenIndex && nextCloseParenIndex != -1){
+                    skipNumber = nextCloseParenIndex;
+                }
             }else{
                 skipNumber = nextSpaceIndex;
             }
@@ -165,7 +192,12 @@ public class TippaeSandbox {
             if(input.startsWith("Row")){
                 RowCount++;
             }
-
+            if(input.startsWith("SNARK::")){
+                SnarkNounCount++;
+                if(currentParserLevel >= 3){//Basically if parsing level is at least down to Row level
+                    SNIC_tempVar++;
+                }
+            }
             if (!(input.startsWith("Refutation") || input.startsWith("Row"))){
                 System.out.println(input.substring(0, skipNumber));
                 ProofSymbolCount++;
