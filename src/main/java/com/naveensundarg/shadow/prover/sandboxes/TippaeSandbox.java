@@ -76,6 +76,10 @@ public class TippaeSandbox {
 
                     Long endTime = System.currentTimeMillis();
 
+                    if(redirectConsole){
+                        System.setOut(originalCout);
+                    }
+
                     System.out.println(p.getName());
 
                     if (answer.isPresent()) {
@@ -117,10 +121,10 @@ public class TippaeSandbox {
         }
 
         if(readLogMode) {
-            System.setOut(originalCout);
+            //System.setOut(originalCout);
             String rawConsole = fileToString(logLocation);
             parseSExpr(rawConsole.substring(0, rawConsole.lastIndexOf(")")));
-            System.out.println( "TotalCharacterProofCount is: " + (rawConsole.length()) + "\n" +
+            System.out.println( "TotalCharacterProofCount is: " + (rawConsole.length()) + "\n" + //Where this value is the number
                     "ShadowProverCompleteSymbolCount is: " + (completeProofSymbolCount) + "\n" +
                     "ShadowProverSanitizedSymbolCount is: " + (ProofSymbolCount) + "\n" +
                     "ShadowProverExtendedProofLength is: " + (ProofSymbolCount - RowCount) + "\n" +
@@ -207,7 +211,7 @@ public class TippaeSandbox {
                 }
             }
             if (!(input.startsWith("Refutation") || input.startsWith("Row"))){
-                System.out.println(input.substring(0, skipNumber));
+                //System.out.println(input.substring(0, skipNumber));
                 ProofSymbolCount++;
                 completeProofSymbolCount++;
             }
