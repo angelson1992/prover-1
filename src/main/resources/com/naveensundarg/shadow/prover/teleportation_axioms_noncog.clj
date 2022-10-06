@@ -928,8 +928,11 @@
     { D1  (and
                          (IsUniqueIdentityCue blackAndYellow)
 
-                         (IsMigrationCue promptingProcess)
-                         (HasCueTyping promptingProcess behavioralPromptHuman)
+                         (IsMigrationCue promptDeparture)
+                         (HasCueTyping promptDeparture behavioralPromptDeparture)
+
+                         (IsMigrationCue promptArrival)
+                         (HasCueTyping promptArrival behavioralPromptArrival)
 
                          (IsMigrationCue signalingProcess)
                          (HasCueTyping signalingProcess behavioralExpressiveActivityStateChange)
@@ -961,13 +964,17 @@
                          (IsSupportedMigrationCueTyping visualMovingFace)
                          (IsSupportedMigrationCueTyping visualFlashingLights)
                          (IsSupportedMigrationCueTyping behavioralExpressiveActivityStateChange)
-                         (IsSupportedMigrationCueTyping behavioralPromptHuman)
+                         (IsSupportedMigrationCueTyping behavioralPromptDeparture)
+                         (IsSupportedMigrationCueTyping behavioralPromptArrival)
 
                          (ArePairedMigrationSignals visualMovingBar barDraining barFilling)
                          (ArePairedMigrationSignals visualMovingFace faceDeparture faceArrival)
                          (ArePairedMigrationSignals visualFlashingLights lightAccelerate lightDecelerate)
                          (ArePairedMigrationSignals behavioralExpressiveActivityStateChange expressiveDeactivation expressiveActivation)
-                         (forall [?migrationCue] (if (IsSupportedCue ?migrationCue) (ArePairedMigrationSignals behavioralPromptHuman humanResponse ?migrationCue) ) )
+                         (forall [?migrationCue] (if (IsSupportedCue ?migrationCue) (ArePairedMigrationSignals behavioralPromptDeparture humanAcceptDeparture ?migrationCue) ) )
+                         (forall [?migrationCue] (if (IsSupportedCue ?migrationCue) (ArePairedMigrationSignals behavioralPromptArrival ?migrationCue humanAcceptArrival) ) )
+                         (forall [?embodiment1 ?embodiment2 ?migrationCue]
+                            (if (SignalingMigrationWithCue ?embodiment1 ?embodiment2 ?migrationCue) (and (PresentingMigrationCue ?embodiment1 ?migrationCue) (PresentingMigrationCue ?embodiment2 ?migrationCue) )))
 
                          (IsSupportedUnfalsifiedIdentityCueTyping behavioralPersonalityIndicatingAction)
                          (IsSupportedUnfalsifiedIdentityCueTyping behavioralSpecificQuirks)
@@ -1067,9 +1074,9 @@
                  )
              )
 
-          A1 (HoldsAt (PresentingMigrationCue (embodiment a) humanResponse) t3)
+          A1 (HoldsAt (PresentingMigrationCue (embodiment a) humanAcceptArrival) t3)
 
-          A2 (HoldsAt (PresentingMigrationCue (embodiment b) signalingProcess) t3)
+          ;;A2 (HoldsAt (PresentingMigrationCue (embodiment b) signalingProcess) t3)
 
           A3 (HoldsAt (PresentingMigrationCue (embodiment a) expressiveDeactivation) t3)
 

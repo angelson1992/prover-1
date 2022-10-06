@@ -12,6 +12,7 @@ import com.naveensundarg.shadow.prover.utils.ProblemReader;
 import com.naveensundarg.shadow.prover.utils.Reader;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 class SimulatedUser {
@@ -211,6 +212,84 @@ public class SimulationSandbox {
 
     }
 
+    public void runPlanningSimulations(String scenarioInput, String startingEmbodiment, String endingEmbodiment){
+        Map<String, Set<Map<String, Set<Pair<String, String>>>>> environmentEmbodiments = CollectionUtils.newMap();
+        //System.out.println(scenarioInput);
+        String[] scenarioLines = scenarioInput.split("\\|");
+        for (String line: scenarioLines){
+
+            String[] lineParts = line.split(",");
+            String embodiment = lineParts[0].trim();
+            String action = lineParts[1].trim();
+            String consequent = lineParts[2].trim();
+            String consequentType = lineParts[3].trim();
+
+            Set<Map<String, Set<Pair<String,String>>>> currentEmbodiment;
+            if (environmentEmbodiments.containsKey(embodiment)){            //Does the data structure already have the embodiment contained
+                currentEmbodiment = environmentEmbodiments.get(embodiment);
+            }else{
+                currentEmbodiment = CollectionUtils.newEmptySet();
+                environmentEmbodiments.put(embodiment, currentEmbodiment);
+            }
+
+            Map<String, Set<Pair<String, String>>> currentAction = CollectionUtils.newMap();
+            boolean foundAction = false;
+            for (Map<String, Set<Pair<String, String>>> actionConsequent: currentEmbodiment){ //Does the data structure already have this action associated with the embodiment
+                if (actionConsequent.containsKey(action)){
+                    currentAction = actionConsequent;
+                    foundAction = true;
+                }
+            }
+            if(!foundAction) {
+                currentEmbodiment.add(currentAction);
+                currentAction.put(action, CollectionUtils.newEmptySet());
+            }
+
+            currentAction.get(action).add(Pair.of(consequent, consequentType));
+
+        }
+
+        Set<Map<String, Set<Pair<String, String>>>> potentialBeginnings = environmentEmbodiments.get(startingEmbodiment);
+
+        Set<Map<String, Set<Pair<String, String>>>> potentialEndings = environmentEmbodiments.get(endingEmbodiment);
+
+        Set<Map<String, Set<Pair<String, String>>>> potentialMiddles = CollectionUtils.newEmptySet();
+        for(String key: environmentEmbodiments.keySet()){
+            if(!key.equals(startingEmbodiment) && !key.equals(endingEmbodiment)){
+                potentialMiddles.addAll(environmentEmbodiments.get(key));
+            }
+        }
+
+        for(Map<String, Set<Pair<String, String>>> beginning: potentialBeginnings){
+
+            Set<Map<String, Set<Pair<String, String>>>> temp = CollectionUtils.newEmptySet();
+            for(Map<String, Set<Pair<String, String>>> tempBeginning: potentialBeginnings){
+                if(!tempBeginning.equals(beginning)){
+                    temp.add(tempBeginning);
+                }
+            }
+            potentialMiddles.addAll(temp);
+
+            for(Map<String, Set<Pair<String, String>>> ending: potentialEndings){
+
+                Set<Map<String, Set<Pair<String, String>>>> temp2 = CollectionUtils.newEmptySet();
+                for(Map<String, Set<Pair<String, String>>> tempEnding: potentialEndings){
+                    if(!tempEnding.equals(ending)){
+                        temp2.add(tempEnding);
+                    }
+                }
+                potentialMiddles.addAll(temp2);
+
+
+
+                potentialMiddles.removeAll(temp2);
+            }
+
+            potentialMiddles.removeAll(temp);
+        }
+
+    }
+
     public void extractEventsFromAssumptions() throws Reader.ParsingException {
 
         Formula eventSearchGoal = Reader.readFormulaFromString("(HoldsAt ?e ?t)");
@@ -274,14 +353,21 @@ public class SimulationSandbox {
 
         List<Problem> tests = ProblemReader.readFrom(SimulationSandbox.class.getResourceAsStream(fileName));
         Problem p = tests.get(problemNumber);
+        Problem q = tests.get(0);
         //System.out.println(p.getGoal());
         //System.out.println(p.getAnswerVariables());
         //System.out.println(testTheory1.checkSimulationStep(1, stepGoal, sGV));
         //testTheory1.extractEventsFromAssumptions();
-        System.out.println(testTheory1.simulationEvents);
-        System.out.println(testTheory1.boardStateAssumptions);
-        testTheory1.runSimulation(0, 6, p.getGoal(), p.getAnswerVariables());
+        //System.out.println(testTheory1.simulationEvents);
+        //System.out.println(testTheory1.boardStateAssumptions);
+        //testTheory1.runSimulation(0, 6, q.getGoal(), q.getAnswerVariables());
+        //testTheory1.runSimulation(0, 6, p.getGoal(), p.getAnswerVariables());
 
+        String scenario = "Phone, displayAvatar, (PresentingUniqueIdentityCue Phone robotHead2), visualFeatures | " +
+                          "Phone, speakWithAvatarVoice, (PresentingUniqueIdentityCue Phone steveTTS001), auditoryVoiceCue | " +
+                          "CarRadio, speakWithAvatarVoice, (PresentingUniqueIdentityCue CarRadio steveTTS001), auditoryVoiceCue";
+
+        testTheory1.runPlanningSimulations(scenario, "Phone", "CarRadio");
     }
 
 }
