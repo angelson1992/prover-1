@@ -280,7 +280,8 @@ public class SimulationSandbox {
                 }
                 potentialMiddles.addAll(temp2);
 
-
+                //TODO Find all combinations of potentialMiddleElements (probs recursion)
+                Set<List<Map<String, Set<Pair<String, String>>>>> combinationOfPotentialMiddles = findAllCombinations(potentialMiddles);
 
                 potentialMiddles.removeAll(temp2);
             }
@@ -288,6 +289,37 @@ public class SimulationSandbox {
             potentialMiddles.removeAll(temp);
         }
 
+    }
+
+    public Set<List<Map<String, Set<Pair<String, String>>>>> findAllCombinations(Set<Map<String, Set<Pair<String, String>>>> input){
+        if(input.size() == 1){
+            List inputList = CollectionUtils.newEmptyList();
+            inputList.add(input);
+            Set inputListsSet = CollectionUtils.newEmptySet();
+            inputListsSet.add(inputList);
+            return inputListsSet;
+        }else{
+            Set<Map<String, Set<Pair<String, String>>>> temp = CollectionUtils.newEmptySet();
+            temp.addAll(input);
+
+            Set<List<Map<String, Set<Pair<String, String>>>>> answerSet = CollectionUtils.newEmptySet();
+            Set<Map<String, Set<Pair<String, String>>>> innerTemp = CollectionUtils.setFrom(temp);
+            for(Map<String, Set<Pair<String, String>>> obj: temp){
+
+                List tempAnswerList = CollectionUtils.newEmptyList();
+                Set shellSet = CollectionUtils.newEmptySet();
+                shellSet.add(obj);
+                tempAnswerList.add(0, shellSet);
+                innerTemp.remove(obj);
+                tempAnswerList.addAll(1, findAllCombinations(innerTemp).iterator().next());
+                answerSet.add(tempAnswerList);
+
+                innerTemp.clear();
+                innerTemp.addAll(input);
+            }
+            return answerSet;
+
+        }
     }
 
     public void extractEventsFromAssumptions() throws Reader.ParsingException {
@@ -365,7 +397,8 @@ public class SimulationSandbox {
 
         String scenario = "Phone, displayAvatar, (PresentingUniqueIdentityCue Phone robotHead2), visualFeatures | " +
                           "Phone, speakWithAvatarVoice, (PresentingUniqueIdentityCue Phone steveTTS001), auditoryVoiceCue | " +
-                          "CarRadio, speakWithAvatarVoice, (PresentingUniqueIdentityCue CarRadio steveTTS001), auditoryVoiceCue";
+                          "CarRadio, speakWithAvatarVoice, (PresentingUniqueIdentityCue CarRadio steveTTS001), auditoryVoiceCue | " +
+                          "ToyRobot, speakWithAvatarVoice, (PresentingUniqueIdentityCue ToyRobot steveTTS001), auditoryVoiceCue";
 
         testTheory1.runPlanningSimulations(scenario, "Phone", "CarRadio");
     }
