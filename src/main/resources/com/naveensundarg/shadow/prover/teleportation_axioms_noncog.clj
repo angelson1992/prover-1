@@ -1090,6 +1090,166 @@
  :goal  (SignalingMigrationWithCue ?x ?y ?z) ;;at t4
 }
 
+{:name PlanningEnvironment
+ :description "The planning axioms"
+ :assumptions
+    { D1  (and           (IsUniqueIdentityCue robotHead2)
+                         (IsUniqueIdentityCue steveTTS001)
+                         (HasCueTyping robotHead2 visualFeatures)
+                         (HasCueTyping steveTTS001 auditoryVoiceCue)
+
+                         (IsSupportedIdentityCueTyping visualColorScheme)
+                         (IsSupportedIdentityCueTyping visualDistinguishingMarkings)
+                         (IsSupportedIdentityCueTyping visualClass)
+                         (IsSupportedIdentityCueTyping visualFeatures)
+                         (IsSupportedIdentityCueTyping behavioralDisplayedMood)
+                         (IsSupportedIdentityCueTyping behavioralInteractionStrategy)
+                         (IsSupportedIdentityCueTyping auditoryVoiceCue)
+                         (IsSupportedIdentityCueTyping auditoryDopplerCue)
+                         (IsSupportedIdentityCueTyping behavioralPersonalityIndicatingAction)
+                         (IsSupportedIdentityCueTyping behavioralTaskCompletionStrategy)
+                         (IsSupportedIdentityCueTyping behavioralTaskContinuation)
+
+                         (IsSupportedMigrationCueTyping visualMovingBar)
+                         (IsSupportedMigrationCueTyping visualMovingFace)
+                         (IsSupportedMigrationCueTyping visualFlashingLights)
+                         (IsSupportedMigrationCueTyping behavioralExpressiveActivityStateChange)
+                         (IsSupportedMigrationCueTyping behavioralPromptDeparture)
+                         (IsSupportedMigrationCueTyping behavioralPromptArrival)
+
+                         (ArePairedMigrationSignals visualMovingBar barDraining barFilling)
+                         (ArePairedMigrationSignals visualMovingFace faceDeparture faceArrival)
+                         (ArePairedMigrationSignals visualFlashingLights lightAccelerate lightDecelerate)
+                         (ArePairedMigrationSignals behavioralExpressiveActivityStateChange expressiveDeactivation expressiveActivation)
+                         (forall [?migrationCue] (if (IsSupportedCue ?migrationCue) (ArePairedMigrationSignals behavioralPromptDeparture humanAcceptDeparture ?migrationCue) ) )
+                         (forall [?migrationCue] (if (IsSupportedCue ?migrationCue) (ArePairedMigrationSignals behavioralPromptArrival ?migrationCue humanAcceptArrival) ) )
+                         (forall [?embodiment1 ?embodiment2 ?migrationCue]
+                            (if (SignalingMigrationWithCue ?embodiment1 ?embodiment2 ?migrationCue) (and (PresentingMigrationCue ?embodiment1 ?migrationCue) (PresentingMigrationCue ?embodiment2 ?migrationCue) )))
+
+                         (IsSupportedUnfalsifiedIdentityCueTyping behavioralPersonalityIndicatingAction)
+                         (IsSupportedUnfalsifiedIdentityCueTyping behavioralSpecificQuirks)
+                         (IsSupportedUnfalsifiedIdentityCueTyping behavioralTaskCompletionStrategy)
+
+                         )
+
+          D2 (forall [?embodiment1 ?embodiment2 ?uniqueIdentityCue]
+                 (if
+                     (and
+                         (PresentedUniqueIdentityCue ?embodiment1 ?uniqueIdentityCue)
+                         (PresentingUniqueIdentityCue ?embodiment2 ?uniqueIdentityCue)
+                         (IsSupportedCue ?uniqueIdentityCue)
+                     )
+                     (MaintainingIdentityWithCue ?embodiment1 ?embodiment2 ?uniqueIdentityCue)
+                 )
+             )
+
+          D3 (forall [?uniqueIdentityCue ?identityCueTyping]
+                 (if
+                     (and
+                         (HasCueTyping ?uniqueIdentityCue ?identityCueTyping)
+                         (IsSupportedIdentityCueTyping ?identityCueTyping)
+                         (IsUniqueIdentityCue ?uniqueIdentityCue)
+                     )
+                     (IsSupportedCue ?uniqueIdentityCue)
+                 )
+             )
+
+          D4 (forall [?embodiment1 ?embodiment2 ?migrationCue]
+                 (if
+                     (and
+                         (PresentingMigrationCue ?embodiment1 ?departureCue)
+                         (PresentingMigrationCue ?embodiment2 ?arrivalCue)
+                         (ArePairedMigrationSignals ?migrationCueTyping ?departureCue ?arrivalCue)
+                         (HasCueTyping ?migrationCue ?migrationCueTyping)
+                         (IsSupportedCue ?migrationCue)
+                     )
+                     (SignalingMigrationWithCue ?embodiment1 ?embodiment2 ?migrationCue)
+                 )
+             )
+
+          D5 (forall [?migrationCue]
+                 (if
+                     (and
+                         (HasCueTyping ?migrationCue ?migrationCueTyping)
+                         (IsSupportedMigrationCueTyping ?migrationCueTyping)
+                         (IsMigrationCue ?migrationCue)
+                     )
+                     (IsSupportedCue ?migrationCue)
+                 )
+             )
+
+          D6 (forall [?embodiment1 ?embodiment2 ?uniqueIdentityCue]
+                 (if
+                     (and
+                         (PresentedUniqueIdentityCueInContext ?embodiment1 ?uniqueIdentityCue ?context1)
+                         (PresentingUniqueIdentityCueInContext ?embodiment2 ?uniqueIdentityCue ?context2)
+                         (AreSimilarContext ?context1 ?context2)
+                         (IsSupportedCue ?uniqueIdentityCue)
+                     )
+                     (MaintainingIdentityWithCue ?embodiment1 ?embodiment2 ?uniqueIdentityCue)
+                 )
+             )
+
+          D7 (forall [?uniqueIdentityCue ?identityCueTyping]
+                 (if
+                     (and
+                         (HasCueTyping ?uniqueIdentityCue ?identityCueTyping)
+                         (IsSupportedUnfalsifiedIdentityCueTyping ?identityCueTyping)
+                         (IsUniqueIdentityCue ?uniqueIdentityCue)
+                     )
+                     (IsSupportedUnfalsifiedCue ?uniqueIdentityCue)
+                 )
+             )
+
+          D8 (forall [?embodiment1 ?embodiment2 ?uniqueIdentityCue]
+                 (if
+                     (and
+                         (IsMoreEmbodiedThan ?embodiment1 ?embodiment2)
+                         (PresentedUniqueIdentityCueInContext ?embodiment1 ?uniqueIdentityCue ?context1)
+                         (PresentingUniqueIdentityCueInContext ?embodiment2 ?uniqueIdentityCue ?context2)
+                         (IsSupportedUnfalsifiedCue ?uniqueIdentityCue)
+                         (AreSimilarContext ?context1 ?context2)
+                     )
+                     (MaintainingUnfalsifiedIdentityWithCue ?embodiment1 ?embodiment2 ?uniqueIdentityCue)
+                 )
+             )
+
+          D9 (forall [?embodiment1 ?embodiment2 ?embodiment3]
+                 (if
+                     (and
+                         (MaintainedUnfalsifiedIdentityWithCue ?embodiment1 ?embodiment2 ?cue1)
+                         (MaintainingUnfalsifiedIdentityWithCue ?embodiment2 ?embodiment3 ?cue2)
+                     )
+                     (MaintainingUnfalsifiedIdentityWithCue ?embodiment1 ?embodiment3 ?cue2)
+                 )
+             )
+
+          D10 (forall [?embodiment1 ?embodiment2 ?embodiment3]
+                           (if
+                               (and
+                                   (MaintainedIdentityWithCue ?embodiment1 ?embodiment2 ?cue1)
+                                   (MaintainingIdentityWithCue ?embodiment2 ?embodiment3 ?cue2)
+                               )
+                               (MaintainingIdentityWithCue ?embodiment1 ?embodiment3 ?cue2)
+                           )
+              )
+
+          A1 (HoldsAt (PresentingUniqueIdentityCue Projector robotHead2) t1)
+          A2 (HoldsAt (PresentingUniqueIdentityCue Phone robotHead2) t2)
+          A3 (HoldsAt (PresentingUniqueIdentityCue Phone steveTTS001) t3)
+          A4 (HoldsAt (PresentingUniqueIdentityCue ToyRobot steveTTS001) t4)
+
+
+
+    }
+
+ :answer-variables [?x ?y ?z]
+
+ :answers-expected ( )
+
+ :goal  (MaintainingIdentityWithCue ?x ?y ?z)
+}
+
 {:name The_Unified_Theory_Of_Teleportation
  :description ""
  :assumptions

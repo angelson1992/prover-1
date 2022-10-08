@@ -199,20 +199,38 @@ public class SimulationSandbox {
         return proof;
     }
 
-    public void runSimulation(int beginningStep, int endingStep, Formula stepGoal, Optional<List<Variable>> stepGoalVariables) throws Reader.ParsingException {
+    public Optional<Pair<Justification, Set<Map<Variable, Value>>>> runSimulation(int beginningStep, int endingStep, Formula stepGoal, Optional<List<Variable>> stepGoalVariables, String startingEmbodiment, String endingEmbodiment) throws Reader.ParsingException {
+
+        Optional<Pair<Justification, Set<Map<Variable, Value>>>> stepProof = Optional.empty();
 
         for (int i = beginningStep; i < endingStep; i++){
 
-            System.out.println("Simulating timeStep " + String.valueOf(i));
+            System.out.println("Simulating timeStep " + i);
 
-            Optional<Pair<Justification, Set<Map<Variable, Value>>>> stepProof = checkSimulationStep(i, stepGoal, stepGoalVariables);
-            System.out.println(stepProof);
+            stepProof = checkSimulationStep(i, stepGoal, stepGoalVariables);
+
+            if(stepProof.isPresent()){
+                System.out.println(stepProof);
+
+                Variable probX = stepGoalVariables.get().get(0);
+                Variable probY = stepGoalVariables.get().get(1);
+                for(Map<Variable, Value> foundAnswer: stepProof.get().getRight()){
+                    String currentStartingEmbodiment = foundAnswer.get(probX).toSnarkString();
+                    String currentEndingEmbodiemnt = foundAnswer.get(probY).toSnarkString();
+                    if(currentStartingEmbodiment.compareToIgnoreCase(startingEmbodiment)==0 && currentEndingEmbodiemnt.compareToIgnoreCase(endingEmbodiment)==0){
+                        return stepProof;
+                    }
+                }
+
+            }
 
         }
 
+        return stepProof;
+
     }
 
-    public void runPlanningSimulations(String scenarioInput, String startingEmbodiment, String endingEmbodiment){
+    public Pair<List<String>, Optional<Pair<Justification, Set<Map<Variable, Value>>>>> runPlanningSimulations(String scenarioInput, String startingEmbodiment, String endingEmbodiment, int stepsSearched, Formula stepgoal, Optional<List<Variable>> stepgoalvars) throws Reader.ParsingException {
         Map<String, Set<Map<String, Set<Pair<String, String>>>>> environmentEmbodiments = CollectionUtils.newMap();
         //System.out.println(scenarioInput);
         String[] scenarioLines = scenarioInput.split("\\|");
@@ -260,6 +278,8 @@ public class SimulationSandbox {
             }
         }
 
+        Set<List<Map<String, Set<Pair<String, String>>>>> scenarioListSet = CollectionUtils.newEmptySet();
+
         for(Map<String, Set<Pair<String, String>>> beginning: potentialBeginnings){
 
             Set<Map<String, Set<Pair<String, String>>>> temp = CollectionUtils.newEmptySet();
@@ -283,11 +303,112 @@ public class SimulationSandbox {
                 //TODO Find all combinations of potentialMiddleElements (probs recursion)
                 Set<List<Map<String, Set<Pair<String, String>>>>> combinationOfPotentialMiddles = findAllCombinations(potentialMiddles);
 
+                for(List<Map<String, Set<Pair<String, String>>>> potentialMid: combinationOfPotentialMiddles){
+                    List<Map<String, Set<Pair<String, String>>>> tempAnswerVar = CollectionUtils.newEmptyList();
+                    tempAnswerVar.add(beginning);
+                    tempAnswerVar.addAll(potentialMid);
+                    tempAnswerVar.add(ending);
+                    scenarioListSet.add(tempAnswerVar);
+                }
+
                 potentialMiddles.removeAll(temp2);
             }
 
             potentialMiddles.removeAll(temp);
         }
+
+        System.out.println(scenarioListSet);
+
+        Set<String> uniqueIdentityCues = CollectionUtils.newEmptySet();
+        Set<String> migrationCues = CollectionUtils.newEmptySet();
+        Set<Pair<String, String>> cueTypings = CollectionUtils.newEmptySet();
+        Optional<Pair<Justification, Set<Map<Variable, Value>>>> successfulSimulation = Optional.empty();
+        List<String> correctPlan = CollectionUtils.newEmptyList();
+
+        for(Set<Map<String, Set<Pair<String, String>>>> embodimentActionConsequentSet: environmentEmbodiments.values()){
+            for(Map<String, Set<Pair<String, String>>> embodimentActionConsequent: embodimentActionConsequentSet){
+                for(Set<Pair<String, String>> consequentPairSet: embodimentActionConsequent.values()){
+                    for(Pair<String, String> consequentPair: consequentPairSet){
+
+                        String identityCue = consequentPair.getLeft().split(" ")[2].trim();
+                        String migrationCue = consequentPair.getLeft().split(" ")[2].trim();
+
+                        if(consequentPair.getLeft().split(" ")[0].trim().compareTo("(PresentingUniqueIdentityCue") == 0){
+                            identityCue = identityCue.substring(0, identityCue.length()-1);
+                            uniqueIdentityCues.add(identityCue);
+                        }
+                        if(consequentPair.getLeft().split(" ")[0].trim().compareTo("(PresentingMigrationCue") == 0){
+                            migrationCue = migrationCue.substring(0, migrationCue.length()-1);
+                            migrationCues.add(migrationCue);
+                        }
+
+                        String cueTypeString = consequentPair.getRight();
+                        Pair<String, String> cueWithTyping = Pair.of(identityCue, cueTypeString);
+                        cueTypings.add(cueWithTyping);
+                    }
+                }
+            }
+        }
+
+        for(List<Map<String, Set<Pair<String, String>>>> scenarioList: scenarioListSet) {
+            System.out.println(scenarioList);
+
+
+            for(int i = 0; i < scenarioList.size(); i++) {
+
+                List<String> baseFormula = CollectionUtils.newEmptyList();
+                String workableString = scenarioList.toString();
+                String[] scenarioSteps = workableString.split(", ");
+                for (int l = 0; l < scenarioSteps.length; l++) {
+                    String workingStep = scenarioSteps[l];
+                    String[] workingStepParts = workingStep.split("[\\(\\[\\{\\)\\]\\}=,]+");
+                    String actionName = workingStepParts[1];
+                    String consequent = workingStepParts[2];
+                    String ConTyping = workingStepParts[3];
+
+                    baseFormula.add(consequent);
+                }
+
+                int timeCount = 0;
+                for(String form:baseFormula){
+                    timeCount++;
+                    Formula inputForm = Reader.readFormulaFromString("(HoldsAt (" + form + ") t" + timeCount + ")");
+                    boardStateAssumptions.add(inputForm);
+                }
+
+                for(String uniqueIdentityCue: uniqueIdentityCues){
+                    Formula isUIDForm = Reader.readFormulaFromString("(IsUniqueIdentityCue " + uniqueIdentityCue + ")");
+                    boardStateAssumptions.add(isUIDForm);
+                }
+
+                for(String migrationCue: migrationCues){
+                    Formula isMigCueForm = Reader.readFormulaFromString("(IsMigrationCue " + migrationCue + ")");
+                    boardStateAssumptions.add(isMigCueForm);
+                }
+
+                for(Pair<String, String> typingPair: cueTypings){
+                    Formula cueTypeForm = Reader.readFormulaFromString("(HasCueTyping " + typingPair.getLeft() + " " + typingPair.getRight() + ")");
+                    boardStateAssumptions.add(cueTypeForm);
+                }
+
+                //stepgoal = Reader.readFormulaFromString("(MaintainingIdentityWithCue " + startingEmbodiment + " " + endingEmbodiment + " ?x)");
+                //Variable var = new Variable("?x");
+                //List varList = CollectionUtils.newEmptyList();
+                //varList.add(var);
+                //stepgoalvars = Optional.of(varList);
+
+                Optional<Pair<Justification, Set<Map<Variable, Value>>>> results = runSimulation(0, stepsSearched, stepgoal, stepgoalvars, startingEmbodiment, endingEmbodiment);
+                if(results.isPresent()){
+                    successfulSimulation = results;
+                    correctPlan = baseFormula;
+                    return Pair.of(correctPlan, successfulSimulation);
+                }
+
+            }
+
+        }
+
+        return Pair.of(correctPlan, successfulSimulation);
 
     }
 
@@ -303,19 +424,26 @@ public class SimulationSandbox {
             temp.addAll(input);
 
             Set<List<Map<String, Set<Pair<String, String>>>>> answerSet = CollectionUtils.newEmptySet();
-            Set<Map<String, Set<Pair<String, String>>>> innerTemp = CollectionUtils.setFrom(temp);
+
             for(Map<String, Set<Pair<String, String>>> obj: temp){
 
-                List tempAnswerList = CollectionUtils.newEmptyList();
-                Set shellSet = CollectionUtils.newEmptySet();
-                shellSet.add(obj);
-                tempAnswerList.add(0, shellSet);
-                innerTemp.remove(obj);
-                tempAnswerList.addAll(1, findAllCombinations(innerTemp).iterator().next());
-                answerSet.add(tempAnswerList);
-
-                innerTemp.clear();
+                Set<Map<String, Set<Pair<String, String>>>> innerTemp = CollectionUtils.newEmptySet();
                 innerTemp.addAll(input);
+
+                List tempAnswerList = CollectionUtils.newEmptyList();
+
+                innerTemp.remove(obj);
+                Set<List<Map<String, Set<Pair<String, String>>>>> innerRecurseResponse = findAllCombinations(innerTemp);
+                for(List<Map<String, Set<Pair<String, String>>>> responseList: innerRecurseResponse){
+                    Set shellSet = CollectionUtils.newEmptySet();
+                    shellSet.add(obj);
+                    tempAnswerList.add(shellSet);
+                    for(int i = 0; i < responseList.size(); i++) {
+                        tempAnswerList.add(responseList.get(i));
+                    }
+                    answerSet.add(tempAnswerList);
+                }
+
             }
             return answerSet;
 
@@ -364,7 +492,7 @@ public class SimulationSandbox {
     public static void main(String[] args) throws Exception{
 
         String fileName = "../teleportation_axioms_noncog.clj";
-        int problemNumber = 6;
+        int problemNumber = 7;
 
         SimulationSandbox testTheory1 = new SimulationSandbox(problemNumber, fileName);
 
@@ -393,14 +521,15 @@ public class SimulationSandbox {
         //System.out.println(testTheory1.simulationEvents);
         //System.out.println(testTheory1.boardStateAssumptions);
         //testTheory1.runSimulation(0, 6, q.getGoal(), q.getAnswerVariables());
-        //testTheory1.runSimulation(0, 6, p.getGoal(), p.getAnswerVariables());
+        //testTheory1.runSimulation(0, 6, p.getGoal(), p.getAnswerVariables(), "Projector", "ToyRobot");
 
         String scenario = "Phone, displayAvatar, (PresentingUniqueIdentityCue Phone robotHead2), visualFeatures | " +
                           "Phone, speakWithAvatarVoice, (PresentingUniqueIdentityCue Phone steveTTS001), auditoryVoiceCue | " +
-                          "CarRadio, speakWithAvatarVoice, (PresentingUniqueIdentityCue CarRadio steveTTS001), auditoryVoiceCue | " +
+                          "Projector, displayAvatar, (PresentingUniqueIdentityCue Projector robotHead2), visualFeatures | " +
                           "ToyRobot, speakWithAvatarVoice, (PresentingUniqueIdentityCue ToyRobot steveTTS001), auditoryVoiceCue";
 
-        testTheory1.runPlanningSimulations(scenario, "Phone", "CarRadio");
+        Pair<List<String>, Optional<Pair<Justification, Set<Map<Variable, Value>>>>> finalResult = testTheory1.runPlanningSimulations(scenario, "ToyRobot", "Projector", 5, p.getGoal(), p.getAnswerVariables());
+        System.out.println(finalResult.getLeft());
     }
 
 }
