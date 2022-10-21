@@ -202,6 +202,7 @@ public class SimulationSandbox {
     public Optional<Pair<Justification, Set<Map<Variable, Value>>>> runSimulation(int beginningStep, int endingStep, Formula stepGoal, Optional<List<Variable>> stepGoalVariables, String startingEmbodiment, String endingEmbodiment) throws Reader.ParsingException {
 
         Optional<Pair<Justification, Set<Map<Variable, Value>>>> stepProof = Optional.empty();
+        boolean foundResponse = false;
 
         for (int i = beginningStep; i < endingStep; i++){
 
@@ -230,7 +231,7 @@ public class SimulationSandbox {
 
     }
 
-    public Pair<List<String>, Optional<Pair<Justification, Set<Map<Variable, Value>>>>> runPlanningSimulations(String scenarioInput, String startingEmbodiment, String endingEmbodiment, int stepsSearched, Formula stepgoal, Optional<List<Variable>> stepgoalvars) throws Reader.ParsingException {
+    public Pair<List<String>, Optional<Pair<Justification, Set<Map<Variable, Value>>>>> runPlanningSimulations(String scenarioInput, String startingEmbodiment, String endingEmbodiment, int beginningTime, int endingTime, Formula stepgoal, Optional<List<Variable>> stepgoalvars) throws Reader.ParsingException {
         Map<String, Set<Map<String, Set<Pair<String, String>>>>> environmentEmbodiments = CollectionUtils.newMap();
         //System.out.println(scenarioInput);
         String[] scenarioLines = scenarioInput.split("\\|");
@@ -397,7 +398,7 @@ public class SimulationSandbox {
                 //varList.add(var);
                 //stepgoalvars = Optional.of(varList);
 
-                Optional<Pair<Justification, Set<Map<Variable, Value>>>> results = runSimulation(0, stepsSearched, stepgoal, stepgoalvars, startingEmbodiment, endingEmbodiment);
+                Optional<Pair<Justification, Set<Map<Variable, Value>>>> results = runSimulation(beginningTime, endingTime, stepgoal, stepgoalvars, startingEmbodiment, endingEmbodiment);
                 if(results.isPresent()){
                     successfulSimulation = results;
                     correctPlan = baseFormula;
@@ -492,7 +493,7 @@ public class SimulationSandbox {
     public static void main(String[] args) throws Exception{
 
         String fileName = "../teleportation_axioms_noncog.clj";
-        int problemNumber = 7;
+        int problemNumber = 1;
 
         SimulationSandbox testTheory1 = new SimulationSandbox(problemNumber, fileName);
 
@@ -512,7 +513,7 @@ public class SimulationSandbox {
 //        Optional<List<Variable>> sGV = Optional.of(stepGoalVariables);
 
         List<Problem> tests = ProblemReader.readFrom(SimulationSandbox.class.getResourceAsStream(fileName));
-        Problem p = tests.get(problemNumber);
+
         Problem q = tests.get(0);
         //System.out.println(p.getGoal());
         //System.out.println(p.getAnswerVariables());
@@ -520,7 +521,25 @@ public class SimulationSandbox {
         //testTheory1.extractEventsFromAssumptions();
         //System.out.println(testTheory1.simulationEvents);
         //System.out.println(testTheory1.boardStateAssumptions);
-        //testTheory1.runSimulation(0, 6, q.getGoal(), q.getAnswerVariables());
+        String finalAnswerString = "";
+        for(int i = 0; i < 9; i++){
+            testTheory1 = new SimulationSandbox(i, fileName);
+            Problem p = tests.get(i);
+            Long startTime = System.currentTimeMillis();
+            Optional<Pair<Justification, Set<Map<Variable, Value>>>> proof = testTheory1.runSimulation(1, 4, p.getGoal(), p.getAnswerVariables(), "?x", "?y");
+            Long endTime = System.currentTimeMillis();
+            if(proof.isPresent()){
+                String responseString = "Proved and Run time for " + p.getName() + " was " + (endTime - startTime) + " milliseconds.\n";
+                System.out.println(responseString);
+                finalAnswerString = finalAnswerString + responseString;
+            }else{
+                String responseString = "Not Proven and Run time for " + p.getName() + " was " + (endTime - startTime) + " milliseconds.\n";
+                System.out.println(responseString);
+                finalAnswerString = finalAnswerString + responseString;
+            }
+        }
+        System.out.println(finalAnswerString);
+
         //testTheory1.runSimulation(0, 6, p.getGoal(), p.getAnswerVariables(), "Projector", "ToyRobot");
 
         String scenario = "Phone, displayAvatar, (PresentingUniqueIdentityCue Phone robotHead2), visualFeatures | " +
@@ -528,8 +547,8 @@ public class SimulationSandbox {
                           "Projector, displayAvatar, (PresentingUniqueIdentityCue Projector robotHead2), visualFeatures | " +
                           "ToyRobot, speakWithAvatarVoice, (PresentingUniqueIdentityCue ToyRobot steveTTS001), auditoryVoiceCue";
 
-        Pair<List<String>, Optional<Pair<Justification, Set<Map<Variable, Value>>>>> finalResult = testTheory1.runPlanningSimulations(scenario, "ToyRobot", "Projector", 5, p.getGoal(), p.getAnswerVariables());
-        System.out.println(finalResult.getLeft());
+        //Pair<List<String>, Optional<Pair<Justification, Set<Map<Variable, Value>>>>> finalResult = testTheory1.runPlanningSimulations(scenario, "Projector", "ToyRobot", 1, 5, p.getGoal(), p.getAnswerVariables());
+        //System.out.println(finalResult.getLeft());
     }
 
 }
